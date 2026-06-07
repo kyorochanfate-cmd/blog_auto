@@ -1,0 +1,18 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.DS_Store
+*.log
+
+# Claude Code directory (contains credentials)
+.claude/
+
+# Temp directory
+tmp/
+
+# Secrets
+*.yaml
+*.yml (if contains credentials)
