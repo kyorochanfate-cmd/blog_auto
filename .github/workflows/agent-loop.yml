@@ -55,5 +55,5 @@ jobs:
           HATENA_USER_ID: ${{ secrets.HATENA_USER_ID }}
           HATENA_BLOG_ID: ${{ secrets.HATENA_BLOG_ID }}
           HATENA_API_KEY: ${{ secrets.HATENA_API_KEY }}
-          HATENA_DRAFT: '0'
+          HATENA_DRAFT: ${{ vars.HATENA_DRAFT || '1' }}
         run: python -m agent_loop.main --${{ steps.mode.outputs.mode }}
