@@ -46,6 +46,8 @@ jobs:
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           GA4_LOOKBACK_DAYS: '7'
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GSC_LOOKBACK_DAYS: '28'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.1-flash-lite-preview
           HATENA_USER_ID: ${{ secrets.HATENA_USER_ID }}
