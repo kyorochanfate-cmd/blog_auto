@@ -39,6 +39,11 @@ _BODY_PROMPT = """あなたは私のガジェットブログの執筆者です�
 {policy}
 ---
 
+過去に公開した記事一覧（内部リンクの素材）:
+---
+{past_articles}
+---
+
 # 文字数・構成
 - 2500〜4000文字
 - Markdown 形式（見出しは ## と ###）
@@ -61,6 +66,14 @@ _BODY_PROMPT = """あなたは私のガジェットブログの執筆者です�
   代わりに「公表スペックから推測される使用感」「同シリーズの傾向から見ると」のように仕様ベースで書く
 - 他サイトに無い独自の切り口を1つ必ず含める（例: 想定シーンの解像度の高さ、競合との見落とされがちな違い、購入後の運用コスト試算）
 - ガジェット × 日常生活／仕事 の文脈に必ず接続する
+
+# 内部リンク（SEO重要・必須）
+- 上記「過去に公開した記事一覧」から**関連性の高い記事を2〜3本選んで内部リンク**を本文中に自然に挿入する
+- 形式: 通常のMarkdownリンク `[記事タイトル](URL)` を文章の流れに溶かして配置
+- 例: 「より深く知りたい人は [SONYのワイヤレスイヤホン徹底レビュー](https://...) も参考になります。」
+- 関連性が低い記事を無理に紐付けるのは禁止。本当に関連する記事がなければ0〜1本でもよい
+- 過去記事のタイトルとURLは**完全一致**で記載（タイトルやURLを改変しない）
+- 関連記事は記事本文の中盤〜終盤に配置（冒頭や結論直後は避ける）
 
 # 商品カード（収益化の要・必須）
 - 言及した主要製品ごとに、独立した行で以下のプレースホルダを置く。**最低2個、できれば3〜5個**
@@ -91,10 +104,23 @@ def _pick_title(policy: str, existing: list[str]) -> str:
     return title[:80]
 
 
-def _write_body(title: str, policy: str) -> str:
+def _format_past_articles(past: list[dict]) -> str:
+    if not past:
+        return '(まだ公開済み記事なし)'
+    lines = []
+    for a in past[:30]:
+        lines.append(f"- [{a['title']}]({a['url']})")
+    return '\n'.join(lines)
+
+
+def _write_body(title: str, policy: str, past_articles: list[dict]) -> str:
     client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
     model = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
-    prompt = _BODY_PROMPT.format(title=title, policy=policy)
+    prompt = _BODY_PROMPT.format(
+        title=title,
+        policy=policy,
+        past_articles=_format_past_articles(past_articles),
+    )
     resp = client.models.generate_content(model=model, contents=prompt)
     body = (resp.text or '').strip()
     if body.startswith('```'):
@@ -121,7 +147,9 @@ def run() -> str | None:
         log.warning('Title already in queue: %s. Skipping.', title)
         return None
 
-    body = _write_body(title, policy)
+    past_articles = sheets.list_published(limit=30)
+    log.info('Loaded %d past articles for internal linking', len(past_articles))
+    body = _write_body(title, policy, past_articles)
     log.info('Generated body (%d chars)', len(body))
 
     now = datetime.now(JST)
