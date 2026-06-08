@@ -1,0 +1,59 @@
+name: agent-loop
+
+on:
+  schedule:
+    # 毎日 07:00 JST に GA4 集計
+    - cron: '0 22 * * *'
+    # 毎日 08:00 JST に投稿待ち記事を公開
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'fetch-data / publish / all'
+        required: true
+        default: 'all'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+          pip install google-analytics-data google-api-python-client
+
+      - name: Write service account key
+        run: |
+          echo '${{ secrets.GCP_SA_KEY }}' > google_creds.json
+
+      - name: Determine mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ github.event.inputs.mode }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "0 22 * * *" ]; then
+            echo "mode=fetch-data" >> $GITHUB_OUTPUT
+          else
+            echo "mode=publish" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run agent loop
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: google_creds.json
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_LOOKBACK_DAYS: '7'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.1-flash-lite-preview
+          HATENA_USER_ID: ${{ secrets.HATENA_USER_ID }}
+          HATENA_BLOG_ID: ${{ secrets.HATENA_BLOG_ID }}
+          HATENA_API_KEY: ${{ secrets.HATENA_API_KEY }}
+          HATENA_DRAFT: ${{ vars.HATENA_DRAFT || '1' }}
+        run: python -m agent_loop.main --${{ steps.mode.outputs.mode }}

@@ -10,3 +10,5 @@ gunicorn>=21.0.0
 python-dotenv>=1.0.0
 markdown>=3.5
 tweepy>=4.14.0
+google-analytics-data>=0.18.0
+google-api-python-client>=2.120.0
