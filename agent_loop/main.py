@@ -27,6 +27,7 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument('--analyze', action='store_true', help='B: 傾向分析 → 方針更新')
     g.add_argument('--write', action='store_true', help='C: 方針 → 記事執筆 → 投稿待ち追記')
     g.add_argument('--publish', action='store_true', help='D: 投稿待ち記事を公開')
+    g.add_argument('--backfill', action='store_true', help='既存の posted 記事を④公開済みに取り込む (一度だけ実行)')
     g.add_argument('--all', action='store_true', help='A → B → C → D を順次実行')
     parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args(argv)
@@ -36,9 +37,20 @@ def main(argv: list[str] | None = None) -> int:
         format='%(asctime)s %(levelname)s %(name)s: %(message)s',
     )
 
-    from . import analytics_hub, article_writer, hatena_publisher, trend_analyzer
+    from . import analytics_hub, article_writer, hatena_publisher, sheets, trend_analyzer
 
     rc = 0
+
+    if args.backfill:
+        try:
+            sheets.ensure_headers()
+            n = sheets.backfill_published_from_queue()
+            print(f'[backfill] copied {n} rows from ③ to ④')
+        except Exception as e:
+            logging.exception('backfill failed')
+            print(f'[backfill] ERROR: {e}', file=sys.stderr)
+            return 1
+        return 0
 
     if args.fetch_data or args.all:
         try:

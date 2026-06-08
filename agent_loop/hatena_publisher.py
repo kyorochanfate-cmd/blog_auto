@@ -118,6 +118,11 @@ def run() -> tuple[int, int]:
             hatena_url = _post_entry(art.title, art.body_md)
             ts = datetime.now(timezone.utc).isoformat(timespec='seconds')
             sheets.mark_posted(art.row, hatena_url, ts)
+            if hatena_url:
+                try:
+                    sheets.record_published(art.title, hatena_url, ts)
+                except Exception as e:
+                    log.warning('record_published failed: %s', e)
             log.info('Posted row=%d title=%s url=%s', art.row, art.title, hatena_url)
             ok += 1
         except Exception as e:

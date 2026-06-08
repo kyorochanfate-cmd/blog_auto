@@ -22,6 +22,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SHEET_CURRENT = '①現状データ'
 SHEET_POLICY = '②新テイスト方針指示書'
 SHEET_QUEUE = '③投稿待ち記事'
+SHEET_PUBLISHED = '④公開済み記事'
 
 QUEUE_HEADER = [
     'id', 'created_at', 'title', 'body_md',
@@ -31,6 +32,7 @@ CURRENT_HEADER = [
     'ts', 'date', 'page_path', 'page_title',
     'views', 'avg_engagement_sec', 'gemini_summary',
 ]
+PUBLISHED_HEADER = ['posted_at', 'title', 'url']
 
 
 @dataclass
@@ -59,7 +61,7 @@ def ensure_headers() -> None:
     existing = {s['properties']['title'] for s in meta.get('sheets', [])}
 
     requests_body: list[dict[str, Any]] = []
-    for name in (SHEET_CURRENT, SHEET_POLICY, SHEET_QUEUE):
+    for name in (SHEET_CURRENT, SHEET_POLICY, SHEET_QUEUE, SHEET_PUBLISHED):
         if name not in existing:
             requests_body.append({'addSheet': {'properties': {'title': name}}})
     if requests_body:
@@ -67,7 +69,11 @@ def ensure_headers() -> None:
             spreadsheetId=sid, body={'requests': requests_body}
         ).execute()
 
-    for name, header in ((SHEET_CURRENT, CURRENT_HEADER), (SHEET_QUEUE, QUEUE_HEADER)):
+    for name, header in (
+        (SHEET_CURRENT, CURRENT_HEADER),
+        (SHEET_QUEUE, QUEUE_HEADER),
+        (SHEET_PUBLISHED, PUBLISHED_HEADER),
+    ):
         rng = f"'{name}'!1:1"
         got = svc.spreadsheets().values().get(spreadsheetId=sid, range=rng).execute()
         if not got.get('values'):
@@ -177,6 +183,75 @@ def append_queue_article(article_id: str, created_at: str, title: str, body_md: 
         insertDataOption='INSERT_ROWS',
         body={'values': [[article_id, created_at, title, body_md, '', '', '', '']]},
     ).execute()
+
+
+def backfill_published_from_queue() -> int:
+    """③で status=posted な記事を ④ に取り込む (URL重複は無視)。
+
+    一度だけ走らせれば既存ブログ記事を内部リンクの素材に使えるようになる。
+    冪等: 既に ④ に存在する URL は再追加しない。
+    """
+    svc = _service()
+    sid = _spreadsheet_id()
+    # ③ の posted 行
+    q = svc.spreadsheets().values().get(
+        spreadsheetId=sid, range=f"'{SHEET_QUEUE}'!A1:H",
+    ).execute().get('values', [])
+    # ④ に既にあるURL
+    p = svc.spreadsheets().values().get(
+        spreadsheetId=sid, range=f"'{SHEET_PUBLISHED}'!A2:C",
+    ).execute().get('values', [])
+    have = {r[2] for r in p if len(r) >= 3 and r[2]}
+
+    added: list[list[str]] = []
+    for row in q[1:]:
+        padded = row + [''] * (8 - len(row))
+        _id, _created, title, _body, status, hatena_url, posted_at, _err = padded[:8]
+        if status != 'posted' or not hatena_url or not title:
+            continue
+        if hatena_url in have:
+            continue
+        added.append([posted_at or '', title, hatena_url])
+        have.add(hatena_url)
+
+    if added:
+        svc.spreadsheets().values().append(
+            spreadsheetId=sid,
+            range=f"'{SHEET_PUBLISHED}'!A1",
+            valueInputOption='RAW',
+            insertDataOption='INSERT_ROWS',
+            body={'values': added},
+        ).execute()
+    return len(added)
+
+
+def record_published(title: str, url: str, posted_at: str) -> None:
+    """④公開済み記事の末尾に1行追加。"""
+    svc = _service()
+    svc.spreadsheets().values().append(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_PUBLISHED}'!A1",
+        valueInputOption='RAW',
+        insertDataOption='INSERT_ROWS',
+        body={'values': [[posted_at, title, url]]},
+    ).execute()
+
+
+def list_published(limit: int = 50) -> list[dict[str, str]]:
+    """④公開済み記事を新しい順で limit 件返す。"""
+    svc = _service()
+    got = svc.spreadsheets().values().get(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_PUBLISHED}'!A2:C",
+    ).execute()
+    rows = got.get('values', [])
+    out: list[dict[str, str]] = []
+    for r in rows:
+        padded = r + [''] * (3 - len(r))
+        posted_at, title, url = padded[:3]
+        if title and url:
+            out.append({'posted_at': posted_at, 'title': title, 'url': url})
+    return out[::-1][:limit]
 
 
 def mark_failed(row: int, error: str) -> None:
