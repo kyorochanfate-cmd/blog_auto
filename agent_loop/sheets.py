@@ -20,6 +20,7 @@ from googleapiclient.discovery import build
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 SHEET_CURRENT = '①現状データ'
+SHEET_POLICY = '②新テイスト方針指示書'
 SHEET_QUEUE = '③投稿待ち記事'
 
 QUEUE_HEADER = [
@@ -58,7 +59,7 @@ def ensure_headers() -> None:
     existing = {s['properties']['title'] for s in meta.get('sheets', [])}
 
     requests_body: list[dict[str, Any]] = []
-    for name in (SHEET_CURRENT, SHEET_QUEUE):
+    for name in (SHEET_CURRENT, SHEET_POLICY, SHEET_QUEUE):
         if name not in existing:
             requests_body.append({'addSheet': {'properties': {'title': name}}})
     if requests_body:
@@ -118,6 +119,63 @@ def mark_posted(row: int, hatena_url: str, posted_at: str) -> None:
         range=f"'{SHEET_QUEUE}'!E{row}:H{row}",
         valueInputOption='RAW',
         body={'values': [['posted', hatena_url, posted_at, '']]},
+    ).execute()
+
+
+def read_current_recent(limit: int = 200) -> list[list[Any]]:
+    """①現状データから直近 limit 行を返す (ヘッダ除く)。"""
+    svc = _service()
+    rng = f"'{SHEET_CURRENT}'!A1:G"
+    got = svc.spreadsheets().values().get(spreadsheetId=_spreadsheet_id(), range=rng).execute()
+    values = got.get('values', [])
+    if len(values) <= 1:
+        return []
+    return values[1:][-limit:]
+
+
+def read_policy() -> str:
+    """②新テイスト方針指示書 A1 セルの内容を返す。空なら ''。"""
+    svc = _service()
+    got = svc.spreadsheets().values().get(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_POLICY}'!A1",
+    ).execute()
+    values = got.get('values', [])
+    if not values or not values[0]:
+        return ''
+    return values[0][0]
+
+
+def write_policy(text: str) -> None:
+    """②新テイスト方針指示書 A1 セルに上書き。"""
+    svc = _service()
+    svc.spreadsheets().values().update(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_POLICY}'!A1",
+        valueInputOption='RAW',
+        body={'values': [[text]]},
+    ).execute()
+
+
+def list_queue_titles() -> list[str]:
+    """③投稿待ち記事の全タイトル (重複検出用)。"""
+    svc = _service()
+    got = svc.spreadsheets().values().get(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_QUEUE}'!C2:C",
+    ).execute()
+    return [row[0] for row in got.get('values', []) if row]
+
+
+def append_queue_article(article_id: str, created_at: str, title: str, body_md: str) -> None:
+    """③投稿待ち記事の末尾に1行追加。status は空 = pending 扱い。"""
+    svc = _service()
+    svc.spreadsheets().values().append(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_QUEUE}'!A1",
+        valueInputOption='RAW',
+        insertDataOption='INSERT_ROWS',
+        body={'values': [[article_id, created_at, title, body_md, '', '', '', '']]},
     ).execute()
 
 

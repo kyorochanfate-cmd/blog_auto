@@ -2,14 +2,12 @@ name: agent-loop
 
 on:
   schedule:
-    # 毎日 07:00 JST に GA4 集計
+    # 毎日 07:00 JST に A→B→C→D を一気に実行
     - cron: '0 22 * * *'
-    # 毎日 08:00 JST に投稿待ち記事を公開
-    - cron: '0 23 * * *'
   workflow_dispatch:
     inputs:
       mode:
-        description: 'fetch-data / publish / all'
+        description: 'fetch-data / analyze / write / publish / all'
         required: true
         default: 'all'
 
@@ -38,10 +36,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "mode=${{ github.event.inputs.mode }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.schedule }}" = "0 22 * * *" ]; then
-            echo "mode=fetch-data" >> $GITHUB_OUTPUT
           else
-            echo "mode=publish" >> $GITHUB_OUTPUT
+            echo "mode=all" >> $GITHUB_OUTPUT
           fi
 
       - name: Run agent loop
