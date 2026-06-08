@@ -53,6 +53,7 @@ jobs:
           HATENA_API_KEY: ${{ secrets.HATENA_API_KEY }}
           HATENA_DRAFT: ${{ vars.HATENA_DRAFT || '1' }}
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           AMAZON_AFFILIATE_TAG: ${{ secrets.AMAZON_AFFILIATE_TAG }}
         run: python -m agent_loop.main --${{ steps.mode.outputs.mode }}
