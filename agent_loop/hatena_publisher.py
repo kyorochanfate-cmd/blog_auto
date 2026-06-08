@@ -4,6 +4,8 @@
   HATENA_USER_ID, HATENA_BLOG_ID, HATENA_API_KEY
   HATENA_DRAFT  : '1' なら下書き保存 (既定: '0' = 公開)
   SPREADSHEET_ID, GOOGLE_APPLICATION_CREDENTIALS
+  RAKUTEN_APP_ID, RAKUTEN_AFFILIATE_ID, AMAZON_AFFILIATE_TAG
+    : [PRODUCT_CARD: 商品名] を実商品カードに変換するため。未設定ならカード変換スキップ
 """
 
 from __future__ import annotations
@@ -11,7 +13,9 @@ from __future__ import annotations
 import logging
 import os
 import re
+import sys
 from datetime import datetime, timezone
+from pathlib import Path
 from xml.sax.saxutils import escape
 
 import markdown as md_lib
@@ -20,12 +24,44 @@ from requests.auth import HTTPBasicAuth
 
 from . import sheets
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+try:
+    from src import product_search  # type: ignore
+except Exception as _e:  # pragma: no cover
+    product_search = None
+    logging.getLogger(__name__).warning('product_search unavailable: %s', _e)
+
 log = logging.getLogger(__name__)
 
 ATOM_ENDPOINT = 'https://blog.hatena.ne.jp/{user}/{blog}/atom/entry'
 
 
+def _convert_product_cards(body_md: str) -> str:
+    """[PRODUCT_CARD: 商品名] を実商品カードHTMLに置換。
+
+    既存の src/product_search.replace_placeholders() を再利用。
+    必要な認証情報は環境変数から組み立てた blog dict として渡す。
+    """
+    if product_search is None or '[PRODUCT_CARD:' not in body_md:
+        return body_md
+    blog = {
+        'rakuten_app_id': os.environ.get('RAKUTEN_APP_ID', ''),
+        'rakuten_affiliate_id': os.environ.get('RAKUTEN_AFFILIATE_ID', ''),
+        'rakuten_access_key': os.environ.get('RAKUTEN_ACCESS_KEY', ''),
+        'amazon_affiliate_tag': os.environ.get('AMAZON_AFFILIATE_TAG', ''),
+    }
+    if not blog['rakuten_app_id']:
+        log.warning('RAKUTEN_APP_ID 未設定。商品カード変換をスキップ。')
+        return body_md
+    try:
+        return product_search.replace_placeholders(body_md, blog)
+    except Exception as e:
+        log.exception('product_card conversion failed: %s', e)
+        return body_md
+
+
 def _build_entry_xml(title: str, body_md: str, draft: bool) -> bytes:
+    body_md = _convert_product_cards(body_md)
     html = md_lib.markdown(body_md, extensions=['fenced_code', 'tables'])
     draft_flag = 'yes' if draft else 'no'
     xml = f"""<?xml version="1.0" encoding="utf-8"?>
