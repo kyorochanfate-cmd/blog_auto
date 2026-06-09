@@ -48,9 +48,60 @@ def fetch_trending(per_source: int = 6, hours: int = 72) -> list[dict]:
 
 
 def format_for_prompt(items: list[dict], limit: int = 25) -> str:
+    """インデックス付きで整形（Gemini が source index で参照できるよう）。"""
     if not items:
         return '(外部トレンドデータなし)'
     lines = []
-    for it in items[:limit]:
-        lines.append(f"- [{it['source']}] {it['title']}")
+    for i, it in enumerate(items[:limit]):
+        lines.append(f"[{i}] [{it['source']}] {it['title']}  ({it['url']})")
     return '\n'.join(lines)
+
+
+def fetch_source_bodies(items: list[dict], indices: list[int],
+                        per_source_chars: int = 1800) -> list[dict]:
+    """指定インデックスの記事本文を取得。
+
+    src/researcher.fetch_article_texts() を再利用。
+    Returns: [{title, url, text}, ...]
+    """
+    sys_path_init = str(Path(__file__).resolve().parent.parent)
+    if sys_path_init not in sys.path:
+        sys.path.insert(0, sys_path_init)
+    try:
+        from src import researcher  # type: ignore
+    except Exception as e:
+        log.warning('researcher unavailable: %s', e)
+        return []
+
+    selected = []
+    for idx in indices:
+        if 0 <= idx < len(items):
+            it = items[idx]
+            selected.append({
+                'title': it.get('title', ''),
+                'link': it.get('url', ''),
+                'summary': it.get('summary', ''),
+            })
+    if not selected:
+        return []
+
+    try:
+        sources = researcher.fetch_article_texts(
+            selected,
+            max_items=len(selected),
+            per_source_chars=per_source_chars,
+        )
+    except Exception as e:
+        log.exception('fetch_article_texts failed: %s', e)
+        return []
+
+    out = []
+    for s in sources:
+        text = s.get('text', '') or s.get('body', '')
+        if text:
+            out.append({
+                'title': s.get('title', ''),
+                'url': s.get('url', '') or s.get('link', ''),
+                'text': text,
+            })
+    return out
