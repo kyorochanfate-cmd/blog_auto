@@ -23,6 +23,7 @@ SHEET_CURRENT = '①現状データ'
 SHEET_POLICY = '②新テイスト方針指示書'
 SHEET_QUEUE = '③投稿待ち記事'
 SHEET_PUBLISHED = '④公開済み記事'
+SHEET_FEEDBACK = '⑤フィードバック'
 
 QUEUE_HEADER = [
     'id', 'created_at', 'title', 'body_md',
@@ -33,6 +34,7 @@ CURRENT_HEADER = [
     'views', 'avg_engagement_sec', 'gemini_summary',
 ]
 PUBLISHED_HEADER = ['posted_at', 'title', 'url']
+FEEDBACK_HEADER = ['date', 'article_url_or_topic', 'feedback']
 
 
 @dataclass
@@ -61,7 +63,7 @@ def ensure_headers() -> None:
     existing = {s['properties']['title'] for s in meta.get('sheets', [])}
 
     requests_body: list[dict[str, Any]] = []
-    for name in (SHEET_CURRENT, SHEET_POLICY, SHEET_QUEUE, SHEET_PUBLISHED):
+    for name in (SHEET_CURRENT, SHEET_POLICY, SHEET_QUEUE, SHEET_PUBLISHED, SHEET_FEEDBACK):
         if name not in existing:
             requests_body.append({'addSheet': {'properties': {'title': name}}})
     if requests_body:
@@ -73,6 +75,7 @@ def ensure_headers() -> None:
         (SHEET_CURRENT, CURRENT_HEADER),
         (SHEET_QUEUE, QUEUE_HEADER),
         (SHEET_PUBLISHED, PUBLISHED_HEADER),
+        (SHEET_FEEDBACK, FEEDBACK_HEADER),
     ):
         rng = f"'{name}'!1:1"
         got = svc.spreadsheets().values().get(spreadsheetId=sid, range=rng).execute()
@@ -251,6 +254,23 @@ def list_published(limit: int = 50) -> list[dict[str, str]]:
         posted_at, title, url = padded[:3]
         if title and url:
             out.append({'posted_at': posted_at, 'title': title, 'url': url})
+    return out[::-1][:limit]
+
+
+def read_feedback(limit: int = 10) -> list[dict[str, str]]:
+    """⑤フィードバックを新しい順で limit 件返す。"""
+    svc = _service()
+    got = svc.spreadsheets().values().get(
+        spreadsheetId=_spreadsheet_id(),
+        range=f"'{SHEET_FEEDBACK}'!A2:C",
+    ).execute()
+    rows = got.get('values', [])
+    out: list[dict[str, str]] = []
+    for r in rows:
+        padded = r + [''] * (3 - len(r))
+        d, target, fb = padded[:3]
+        if fb.strip():
+            out.append({'date': d, 'target': target, 'feedback': fb})
     return out[::-1][:limit]
 
 
