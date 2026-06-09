@@ -31,6 +31,8 @@ except Exception as _e:  # pragma: no cover
     product_search = None
     logging.getLogger(__name__).warning('product_search unavailable: %s', _e)
 
+from . import image_inserter  # noqa: E402
+
 log = logging.getLogger(__name__)
 
 ATOM_ENDPOINT = 'https://blog.hatena.ne.jp/{user}/{blog}/atom/entry'
@@ -61,6 +63,7 @@ def _convert_product_cards(body_md: str) -> str:
 
 
 def _build_entry_xml(title: str, body_md: str, draft: bool) -> bytes:
+    body_md = image_inserter.insert_official_images(body_md)
     body_md = _convert_product_cards(body_md)
     html = md_lib.markdown(body_md, extensions=['fenced_code', 'tables'])
     draft_flag = 'yes' if draft else 'no'
