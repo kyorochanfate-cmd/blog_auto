@@ -132,12 +132,18 @@ _BODY_PROMPT = """あなたは私のガジェットブログの執筆者です�
 - 形式: `[PRODUCT_CARD: 商品名]` を独立行で置く。目安2〜4個
 - **本文で実際に名前を出して論じた製品のみ**カードにする。文中に一度も出てこない製品のカードは禁止
 - カードは、その製品を論じた段落の直後に置く（無関係な位置に固めない）
-- 商品名は「メーカー名 + 型番」の形式にする（例: `Sony WH-1000XM5` / `Anker PowerCore 10000`）
-- **すでに発売済みで、日本国内で本体が実売されている製品に限る**。
-  未発表・未発売・噂段階の製品（次期モデルの予想型番など）はカードにしない
-  （本体が売られていないと、ケースやフィルムなどの無関係な商品しかヒットしないため）
+- 商品名は**必ず「メーカー名 + 型番」の形式**にする（例: `Sony WH-1000XM5` / `Anker PowerCore 10000`）。
+  `DR02` のように**型番だけ・ブランド名を省略したカードは絶対に禁止**。
+  型番だけだと、たまたま同じ型番の全く無関係な他社製品(別ジャンル)が
+  ヒットしてしまい、記事と無関係なカードになる
+- **個人が Amazon/楽天market で今すぐ購入できる、日本国内で実売されている製品に限る**。
+  以下はすべてカード化しない(無理に代替品も探さず、カード0個で記事を完結させる):
+  - 未発表・未発売・噂段階の製品（次期モデルの予想型番など）
+  - **法人向け・産業用・B2B専用の製品**（物流ロボット・工場用機器・
+    業務用サイネージ機器など。個人向け小売チャネルで売られていないため）
+  - サービス・アプリ・SaaS・自動車・住宅・不動産・飲食
 - 「スマートフォン」「ワイヤレスイヤホン」のような一般名詞だけのカードは禁止（型番を必ず含める）
-- 適切な製品が2つ未満なら、無理に数を揃えず1つでよい
+- 適切な製品が2つ未満なら、無理に数を揃えず0〜1個でよい
 
 # 出力
 Markdown本文のみ。タイトル行は含めない。前置きや「```」は不要。
@@ -240,7 +246,7 @@ def _pick_title_with_meta(
     trending: list[dict], feedback: list[dict],
 ) -> dict:
     client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
-    model = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
+    model = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
 
     prompt = _TITLE_PROMPT.format(
         policy=policy or '(なし)',
@@ -282,7 +288,7 @@ def _write_body_once(
     rewrite_context: dict | None = None,
 ) -> str:
     client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
-    model = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
+    model = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
 
     prompt = _BODY_PROMPT.format(
         title=title,
@@ -309,7 +315,7 @@ def _write_body_once(
 
 def _self_critique(title: str, angle_text: str, body: str) -> dict:
     client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
-    model = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
+    model = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
     prompt = _CRITIQUE_PROMPT.format(title=title, angle=angle_text, body=body[:6000])
     try:
         data = _gemini_json(client, model, prompt)
