@@ -240,13 +240,14 @@ def search(keyword, blog, hits=1, sort='standard', min_relevance=0.45):
             scored.append((rel, c))
 
     if not scored:
-        best = max(
-            (_relevance_score(keyword, c['name'], c['price'], prices), c)
-            for c in candidates
+        best_rel, best_item = max(
+            ((_relevance_score(keyword, c['name'], c['price'], prices), c)
+             for c in candidates),
+            key=lambda pair: pair[0],
         )
         print(
             f'[product-search] "{keyword}": no relevant item '
-            f'(best={best[0]:.2f} "{best[1]["name"][:40]}")',
+            f'(best={best_rel:.2f} "{best_item["name"][:40]}")',
             flush=True,
         )
         return []
@@ -433,7 +434,13 @@ def replace_placeholders(markdown_body, blog):
             print(f'[product-card] "{kw}" not mentioned in body, dropping card', flush=True)
             products = []
         else:
-            products = search(kw, blog, hits=1)
+            try:
+                products = search(kw, blog, hits=1)
+            except Exception as e:
+                # 1商品の検索失敗で記事全体のカード変換を巻き込まない。
+                # このプレースホルダだけ「未ヒット」扱いにして処理を継続する。
+                print(f'[product-card] search error for "{kw}": {e}', flush=True)
+                products = []
         if not products:
             # 未ヒット: プレースホルダの直前の段落 (誘導文) もまとめて削除
             print(f'[product-card] no hit for "{kw}", removing placeholder + leading CTA', flush=True)
