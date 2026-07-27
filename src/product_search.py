@@ -23,40 +23,150 @@ _DEFAULT_ORIGIN = 'https://tako-karamaru.hatenablog.com'
 _last_call_ts = [0.0]
 _MIN_INTERVAL = 1.2
 
+# 関連度判定に使う候補数。1件だけ取ると「レビュー数の多いアクセサリ」を
+# 掴まされるので、多めに取ってスコアリングで本命を選ぶ。
+_CANDIDATE_POOL = 24
 
-def search(keyword, blog, hits=1, sort='-reviewCount'):
-    """楽天市場で keyword を検索。最も評価の高い商品 hits 件を返す。
+# 商品名に含まれると「本体ではなく周辺アクセサリ」を強く示唆する語。
+# キーワード側に同じ語が含まれる場合は減点しない (例: "iPhone ケース" を探しているとき)。
+_ACCESSORY_WORDS = (
+    'ケース', 'カバー', 'フィルム', '保護', 'ガラス', 'シール', 'ステッカー',
+    'ケーブル', '充電器', 'アダプタ', 'アダプター', '変換', 'コネクタ',
+    'スタンド', 'ホルダー', 'マウント', '三脚', 'グリップ', 'ストラップ',
+    'イヤーピース', 'イヤーパッド', '替え', '交換用', '互換', '純正品ではない',
+    'バッグ', 'ポーチ', '収納', 'クリーナー', 'スキンシール',
+    '延長', 'ハブ', '分配', 'トラベル', 'キャップ', 'ペン先',
+)
 
-    Args:
-        keyword: 商品名(例: "Sony WH-1000XM5")
-        blog: ブログ設定 dict (rakuten_app_id / rakuten_access_key / rakuten_affiliate_id 必要)
-        hits: 取得件数 (1 〜 30)
-        sort: 並び順 ('-reviewCount' = レビュー多い順、'standard' = 楽天順)
+# 商品名にあると「中古・ジャンク・セット売り」を示唆する語 (軽い減点)
+_NOISE_WORDS = ('中古', 'ジャンク', '訳あり', 'アウトレット', 'まとめ買い', '福袋')
 
-    Returns:
-        [{'name','price','image_url','affiliate_url','shop'}, ...] or [] if 失敗 / 0件
+# 型番トークン: 英字と数字が混在する塊 (WH-1000XM5, M90, S6, XM5 など)
+_MODEL_TOKEN_RE = re.compile(r'[A-Za-z]+[-]?\d+[A-Za-z0-9\-]*|\d+[A-Za-z]+[A-Za-z0-9\-]*')
+# 単語分割 (英数字の連なり / カタカナの連なり)
+_WORD_RE = re.compile(r'[A-Za-z0-9]+|[ァ-ヶー]+')
+
+
+def _normalize(s):
+    """全角英数→半角、小文字化、記号を空白に。"""
+    if not s:
+        return ''
+    out = []
+    for ch in s:
+        code = ord(ch)
+        # 全角英数字・全角スペースを半角へ
+        if 0xFF01 <= code <= 0xFF5E:
+            ch = chr(code - 0xFEE0)
+        elif code == 0x3000:
+            ch = ' '
+        out.append(ch)
+    s = ''.join(out).lower()
+    # 記号類を空白に (型番のハイフンは残す)
+    s = re.sub(r'[【】\[\]（）()「」『』/,、。！!？?：:；;＋+*"\'|]', ' ', s)
+    return re.sub(r'\s+', ' ', s).strip()
+
+
+def _tokens(s):
+    return set(_WORD_RE.findall(_normalize(s)))
+
+
+def _model_tokens(s):
+    """型番らしきトークン (英字+数字混在) を返す。"""
+    return set(t.lower() for t in _MODEL_TOKEN_RE.findall(_normalize(s)))
+
+
+def _relevance_score(keyword, item_name, price, prices_in_pool):
+    """キーワードに対する商品名の関連度を 0.0〜1.0 で返す。
+
+    低いほど「関係ない商品」。呼び出し側が閾値でフィルタする。
     """
+    kw_norm = _normalize(keyword)
+    name_norm = _normalize(item_name)
+    if not kw_norm or not name_norm:
+        return 0.0
+
+    score = 0.0
+
+    # ---- 1. 型番一致 (最重要) ----
+    kw_models = _model_tokens(keyword)
+    name_models = _model_tokens(item_name)
+    if kw_models:
+        matched = kw_models & name_models
+        # 型番が1つも一致しない = ほぼ別商品
+        if not matched:
+            return 0.0
+        score += 0.45 * (len(matched) / len(kw_models))
+    else:
+        # 型番なしキーワード (例: "ワイヤレスイヤホン") は語の一致でみる
+        score += 0.20
+
+    # ---- 2. 語の重なり ----
+    kw_words = _tokens(keyword)
+    name_words = _tokens(item_name)
+    if kw_words:
+        overlap = len(kw_words & name_words) / len(kw_words)
+        score += 0.35 * overlap
+        # キーワードの語が半分も入っていない商品名は疑わしい
+        if overlap < 0.4:
+            score -= 0.15
+
+    # ---- 3. アクセサリ判定 (今回の本命の修正) ----
+    # キーワード自体がアクセサリを指している場合は減点しない
+    kw_is_accessory = any(w in keyword for w in _ACCESSORY_WORDS)
+    if not kw_is_accessory:
+        hit = [w for w in _ACCESSORY_WORDS if w in item_name]
+        if hit:
+            # 「〜用」「〜対応」はアクセサリの決定的シグナル
+            if re.search(r'(用|対応|専用)\s*(の)?', item_name):
+                return 0.0
+            score -= 0.30 * min(len(hit), 2)
+
+    # ---- 4. ノイズ語 ----
+    if any(w in item_name for w in _NOISE_WORDS):
+        score -= 0.15
+
+    # ---- 5. 価格の妥当性 ----
+    # 候補群の中央値より極端に安い = アクセサリの可能性が高い
+    if prices_in_pool and price:
+        srt = sorted(p for p in prices_in_pool if p > 0)
+        if srt:
+            median = srt[len(srt) // 2]
+            if median > 0 and price < median * 0.15:
+                score -= 0.25
+
+    return max(0.0, min(1.0, score))
+
+
+def _sanitize_keyword(keyword):
+    """楽天APIが 400 を返さないようキーワードを整える。"""
+    kw = re.sub(r'[【】\[\]｜|/\\"\'<>]', ' ', keyword or '')
+    kw = re.sub(r'\s+', ' ', kw).strip()
+    # API は長すぎるキーワードを弾く
+    return kw[:64]
+
+
+def _fetch_candidates(keyword, blog, sort):
+    """楽天APIを1回叩いて候補リストを返す。失敗時は []。"""
     app_id = (blog.get('rakuten_app_id') or '').strip()
     access_key = (blog.get('rakuten_access_key') or '').strip()
     aff_id = (blog.get('rakuten_affiliate_id') or '').strip()
-    if not (app_id and access_key and keyword):
+    kw = _sanitize_keyword(keyword)
+    if not (app_id and access_key and kw):
         return []
 
-    # Origin ヘッダーはブログドメインから
     domain = (blog.get('hatena_blog_domain') or '').strip()
     origin = f'https://{domain}' if domain else _DEFAULT_ORIGIN
 
-    # レート制限保護
     elapsed = time.time() - _last_call_ts[0]
     if elapsed < _MIN_INTERVAL:
         time.sleep(_MIN_INTERVAL - elapsed)
 
     params = {
         'format': 'json',
-        'keyword': keyword,
+        'keyword': kw,
         'applicationId': app_id,
         'accessKey': access_key,
-        'hits': max(1, min(int(hits), 30)),
+        'hits': _CANDIDATE_POOL,
         'sort': sort,
         'minPrice': 500,  # ジャンク・送料のみ商品を除外
         'imageFlag': 1,   # 画像付き商品のみ
@@ -77,30 +187,79 @@ def search(keyword, blog, hits=1, sort='-reviewCount'):
         print(f'[product-search] HTTP {r.status_code}: {r.text[:200]}', flush=True)
         return []
 
-    items = r.json().get('Items') or []
-    results = []
-    for wrapper in items[:hits]:
+    out = []
+    for wrapper in (r.json().get('Items') or []):
         item = wrapper.get('Item') or {}
         name = (item.get('itemName') or '').strip()
         if not name:
             continue
-        price = item.get('itemPrice') or 0
         img = ''
         for img_obj in (item.get('mediumImageUrls') or []):
             url = img_obj.get('imageUrl') or ''
             if url:
-                # ?_ex=128x128 サフィックスを大きいサイズに置換
                 img = re.sub(r'\?_ex=\d+x\d+$', '?_ex=300x300', url)
                 break
-        aff_url = (item.get('affiliateUrl') or item.get('itemUrl') or '').strip()
-        results.append({
+        out.append({
             'name': name,
-            'price': int(price),
+            'price': int(item.get('itemPrice') or 0),
             'image_url': img,
-            'affiliate_url': aff_url,
+            'affiliate_url': (item.get('affiliateUrl') or item.get('itemUrl') or '').strip(),
             'shop': (item.get('shopName') or '').strip(),
+            'review_count': int(item.get('reviewCount') or 0),
         })
-    return results
+    return out
+
+
+def search(keyword, blog, hits=1, sort='standard', min_relevance=0.45):
+    """楽天市場で keyword を検索し、**キーワードに実際に関連する** 商品を返す。
+
+    候補を _CANDIDATE_POOL 件取得し、型番一致 / 語の重なり / アクセサリ判定 /
+    価格の妥当性でスコアリングして並べ替える。閾値を超える商品が1つもなければ
+    空リストを返す (= 無関係な商品カードを出すくらいならカードを出さない)。
+
+    Args:
+        keyword: 商品名(例: "Sony WH-1000XM5")
+        blog: ブログ設定 dict (rakuten_app_id / rakuten_access_key / rakuten_affiliate_id 必要)
+        hits: 返す件数
+        sort: 楽天APIの並び順。'standard' はキーワード適合度順で、
+              '-reviewCount' より本体商品が上位に来やすい
+        min_relevance: この関連度未満の商品は捨てる
+
+    Returns:
+        [{'name','price','image_url','affiliate_url','shop'}, ...] or []
+    """
+    candidates = _fetch_candidates(keyword, blog, sort)
+    if not candidates:
+        return []
+
+    prices = [c['price'] for c in candidates]
+    scored = []
+    for c in candidates:
+        rel = _relevance_score(keyword, c['name'], c['price'], prices)
+        if rel >= min_relevance:
+            scored.append((rel, c))
+
+    if not scored:
+        best = max(
+            (_relevance_score(keyword, c['name'], c['price'], prices), c)
+            for c in candidates
+        )
+        print(
+            f'[product-search] "{keyword}": no relevant item '
+            f'(best={best[0]:.2f} "{best[1]["name"][:40]}")',
+            flush=True,
+        )
+        return []
+
+    # 関連度優先、同点ならレビュー数の多い順
+    scored.sort(key=lambda x: (round(x[0], 2), x[1]['review_count']), reverse=True)
+    top = scored[:hits]
+    print(
+        f'[product-search] "{keyword}": {len(scored)}/{len(candidates)} relevant, '
+        f'picked "{top[0][1]["name"][:40]}" (rel={top[0][0]:.2f})',
+        flush=True,
+    )
+    return [c for _, c in top]
 
 
 def build_card_html(keyword, product, amazon_tag=''):
@@ -211,10 +370,35 @@ _CTA_HINT_WORDS = (
 )
 
 
+def _mentioned_in_body(keyword, body_without_placeholders):
+    """その商品名が本文中で実際に語られているか。
+
+    Gemini が本文で一度も触れていない商品のカードを置くことがあるため、
+    「本文に出てこない商品のカードは出さない」ためのチェック。
+    型番があれば型番の一致を、無ければ語の過半一致を要求する。
+    """
+    body = _normalize(body_without_placeholders)
+    if not body:
+        return False
+
+    models = _model_tokens(keyword)
+    if models:
+        return any(m in body for m in models)
+
+    words = [w for w in _tokens(keyword) if len(w) >= 2]
+    if not words:
+        return False
+    hit = sum(1 for w in words if w in body)
+    return hit >= max(1, len(words) // 2)
+
+
 def replace_placeholders(markdown_body, blog):
     """記事本文中の [PRODUCT_CARD: 商品名] を実商品カード HTML に置換。
 
-    商品が楽天で見つからなければプレースホルダ自体を削除する。
+    次のいずれかに当てはまるプレースホルダは削除する:
+      - 本文中でその商品に一度も言及していない (記事と無関係なカード)
+      - 楽天で「キーワードに実際に関連する」商品が見つからない
+
     さらに、そのプレースホルダの直前にあった「誘導文」(気になる人はカードを〜等) も
     一緒に削除する。「カードが無いのに『カードを見て』と案内する」という誤誘導を防ぐ。
     """
@@ -225,6 +409,10 @@ def replace_placeholders(markdown_body, blog):
 
     amazon_tag = (blog.get('amazon_affiliate_tag') or '').strip()
     seen_keywords = set()
+
+    # 言及チェック用に、プレースホルダを除いた本文を用意しておく
+    # (プレースホルダ自身を「言及」とカウントしないため)
+    body_text_only = _PLACEHOLDER_RE.sub(' ', markdown_body)
 
     # 各 [PRODUCT_CARD: xxx] を「カード結果」「未ヒットなら直前段落も削除」で順次処理する。
     # re.sub の repl では「直前を一緒に削除」できないので、手動でループ。
@@ -241,7 +429,11 @@ def replace_placeholders(markdown_body, blog):
             continue
         seen_keywords.add(kw.lower())
 
-        products = search(kw, blog, hits=1)
+        if not _mentioned_in_body(kw, body_text_only):
+            print(f'[product-card] "{kw}" not mentioned in body, dropping card', flush=True)
+            products = []
+        else:
+            products = search(kw, blog, hits=1)
         if not products:
             # 未ヒット: プレースホルダの直前の段落 (誘導文) もまとめて削除
             print(f'[product-card] no hit for "{kw}", removing placeholder + leading CTA', flush=True)
