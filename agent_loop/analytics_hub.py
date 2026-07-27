@@ -5,7 +5,7 @@
   GA4_LOOKBACK_DAYS    : 取得日数 (デフォルト 7)
   SPREADSHEET_ID       : 追記先スプレッドシート
   GEMINI_API_KEY       : Gemini API キー
-  GEMINI_MODEL         : 既定 'gemini-3.1-flash-lite-preview'
+  GEMINI_MODEL         : 既定 'gemini-3.5-flash-lite'
   GOOGLE_APPLICATION_CREDENTIALS : サービスアカウントJSON (GA4 / Sheets 両方の権限)
 """
 
@@ -81,7 +81,7 @@ def _gemini_summary(rows: list[dict]) -> str:
     if not rows:
         return ''
     client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
-    model = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
+    model = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
     top = rows[:30]
     prompt = _SUMMARY_PROMPT.format(rows_json=json.dumps(top, ensure_ascii=False))
     try:

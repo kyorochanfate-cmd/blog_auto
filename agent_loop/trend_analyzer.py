@@ -88,7 +88,7 @@ def run() -> str:
     )
 
     client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
-    model = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
+    model = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
     log.info('Calling Gemini for trend analysis (model=%s, rows=%d)', model, len(rows))
     resp = client.models.generate_content(model=model, contents=prompt)
     text = (resp.text or '').strip()
