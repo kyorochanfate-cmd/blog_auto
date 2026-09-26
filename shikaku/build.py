@@ -18,6 +18,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from . import charts, content
+from .validate import validate
 
 HERE = Path(__file__).resolve().parent
 
@@ -176,6 +177,10 @@ def main() -> None:
     ap.add_argument('--today', default=None, help='YYYY-MM-DD (検証用に日付を固定)')
     a = ap.parse_args()
     today = date.fromisoformat(a.today) if a.today else date.today()
+    errs = validate(json.loads(Path(a.data).read_text(encoding='utf-8')))
+    if errs:
+        print('\n'.join(errs))
+        raise SystemExit(f'データに問題があるためビルドを中止しました ({len(errs)}件)')
     report = build(Path(a.data), Path(a.out), today)
     print(f'indexed: {len(report["indexed"])}')
     for slug, reasons in report['noindex'].items():

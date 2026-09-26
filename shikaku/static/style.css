@@ -84,6 +84,8 @@ summary { cursor: pointer; font-weight: 600; }
 .plan-form label { display: grid; gap: 4px; font-weight: 600; font-size: .92rem; }
 .plan-form select, .plan-form input { font: inherit; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); max-width: 100%; }
 .plan-form input[type=number] { width: 8em; }
-.warn { background: var(--before-bg); color: var(--before); padding: 8px 12px; border-radius: 6px; }
+.notice { border-left: 4px solid var(--before); background: var(--before-bg); padding: 8px 14px; border-radius: 6px; margin: 12px 0; }
+.notice ul { margin: .3rem 0; padding-left: 1.2rem; }
+.warn {background: var(--before-bg); color: var(--before); padding: 8px 12px; border-radius: 6px; }
 .site-footer { border-top: 1px solid var(--line); margin-top: 3rem; padding: 1rem 0 2rem; font-size: .85rem; color: var(--muted); }
 .ad-note { font-size: .8rem; }

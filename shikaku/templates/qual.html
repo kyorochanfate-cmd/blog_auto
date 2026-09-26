@@ -30,6 +30,13 @@
 <h1>{{ q.name }}の試験日程・合格率・受験料</h1>
 <p class="checked">データ確認日: {{ q.checked_at or '未確認' }}{% if q.organizer %} ／ 実施団体: {{ q.organizer }}{% endif %}</p>
 
+{% if q.notices %}
+<section class="notice" role="note">
+  <strong>重要なお知らせ</strong>
+  <ul>{% for n in q.notices %}<li>{{ n }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+
 <section class="summary">
   {% for s in summary %}<p>{{ s }}</p>{% endfor %}
 </section>
