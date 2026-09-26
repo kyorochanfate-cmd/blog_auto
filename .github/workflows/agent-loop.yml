@@ -49,7 +49,7 @@ jobs:
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           GSC_LOOKBACK_DAYS: '28'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.1-flash-lite-preview
+          GEMINI_MODEL: gemini-3.5-flash-lite
           HATENA_USER_ID: ${{ secrets.HATENA_USER_ID }}
           HATENA_BLOG_ID: ${{ secrets.HATENA_BLOG_ID }}
           HATENA_API_KEY: ${{ secrets.HATENA_API_KEY }}

@@ -228,6 +228,18 @@ def search(keyword, blog, hits=1, sort='standard', min_relevance=0.45):
     Returns:
         [{'name','price','image_url','affiliate_url','shop'}, ...] or []
     """
+    # ブランド名を伴わない「型番だけ」のキーワードは検索しない。
+    # 例: "DR02" だけだと、たまたま型番が一致する全く無関係な他社製品
+    # (別ジャンル・別ブランド) がヒットしても見分けようがない。
+    # "iFLYTEK S6" や "Sony WH-1000XM5" のように語が2つ以上あれば通す。
+    kw_word_count = len(_tokens(keyword))
+    if kw_word_count < 2:
+        print(
+            f'[product-search] "{keyword}": キーワードにブランド名が無く曖昧なため検索スキップ',
+            flush=True,
+        )
+        return []
+
     candidates = _fetch_candidates(keyword, blog, sort)
     if not candidates:
         return []

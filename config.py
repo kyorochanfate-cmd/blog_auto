@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / '.env')
 
 GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite-preview')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
 
 # はてな初期シード用 (任意)
 HATENA_ID = os.environ.get('HATENA_ID', '')
