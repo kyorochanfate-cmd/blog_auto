@@ -56,11 +56,15 @@ def apply_one(q: dict, p: dict) -> None:
 
 
 def run(data_path: Path, proposals_path: Path) -> list[str]:
+    report = json.loads(proposals_path.read_text(encoding='utf-8'))
+    return apply_list(data_path, report.get('proposals', []))
+
+
+def apply_list(data_path: Path, proposals: list[dict]) -> list[str]:
     quals = json.loads(data_path.read_text(encoding='utf-8'))
     by_slug = {q['slug']: q for q in quals}
-    report = json.loads(proposals_path.read_text(encoding='utf-8'))
     applied = []
-    for p in report.get('proposals', []):
+    for p in proposals:
         if not p.get('approved') or not p.get('field'):
             continue
         q = by_slug.get(p['slug'])

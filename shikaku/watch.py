@@ -20,6 +20,7 @@ import json
 import logging
 import os
 import re
+import time
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,8 +39,15 @@ ALLOWED_FIELDS = {'exams', 'fee_yen', 'fee_note', 'pass_rates', 'schedule_text',
 
 def fetch_text(url: str) -> tuple[str, str]:
     """(本文テキスト, 種別) を返す。PDF は本文を取らずバイト列のハッシュ用に16進を返す。"""
-    r = requests.get(url, headers={'User-Agent': UA}, timeout=TIMEOUT)
-    r.raise_for_status()
+    for attempt in range(3):
+        try:
+            r = requests.get(url, headers={'User-Agent': UA}, timeout=TIMEOUT)
+            r.raise_for_status()
+            break
+        except (requests.ConnectionError, requests.Timeout):
+            if attempt == 2:
+                raise
+            time.sleep(5 * (attempt + 1))
     ctype = r.headers.get('content-type', '')
     if 'pdf' in ctype or url.lower().endswith('.pdf'):
         return hashlib.sha256(r.content).hexdigest(), 'pdf'
@@ -78,11 +86,15 @@ _PROMPT = """あなたは資格試験の公式情報を確認する担当者で�
 
 # 厳守ルール
 - 公式ページの本文に明記されていることだけを根拠にする。推測・一般知識は禁止
-- 各提案には、根拠となる本文の一節を evidence に**一字一句そのまま**引用する (30〜120字)
+- 各提案には、根拠となる本文の一節を evidence に**一字一句そのまま**引用する (20〜200字)
 - 変更がなければ proposals は空配列
 - 対象項目: exams (試験日・申込期間), fee_yen, fee_note, pass_rates, schedule_text, eligibility, notices
-- exams の日付は YYYY-MM-DD。和暦は西暦に直す。申込期間が書かれていなければ省略
-- pass_rates は {"label": "...", "rate": 数値, "examinees": 整数(任意)} 形式で、追加すべき回だけ出す
+- value の形式は次の通り (キー名を変えない):
+  - exams: [{"label": "回の名前", "exam_date": "YYYY-MM-DD", "apply_start": "YYYY-MM-DD", "apply_end": "YYYY-MM-DD"}]
+    (和暦は西暦に直す。申込期間が本文に無ければ apply_start/apply_end は省略)
+  - pass_rates: [{"label": "回の名前", "rate": 数値, "examinees": 整数(任意)}] (追加すべき回だけ)
+  - fee_yen: 整数 / fee_note, schedule_text, eligibility: 文字列 / notices: [文字列]
+- evidence は本文の連続した一節をそのまま写す。離れた行をつなげない。複数の行が必要なら改行で区切る
 - 今日は {today}。今日より前の試験日は提案しない
 
 # 資格名
@@ -124,20 +136,90 @@ def propose_updates(q: dict, text: str, today: str) -> list[dict]:
     return data.get('proposals') or []
 
 
+_KEY_ALIASES = {
+    'date': 'exam_date', 'exam': 'exam_date', 'test_date': 'exam_date',
+    'start_date': 'apply_start', 'application_start': 'apply_start', 'apply_from': 'apply_start',
+    'end_date': 'apply_end', 'application_end': 'apply_end', 'deadline': 'apply_end', 'apply_to': 'apply_end',
+    'name': 'label', 'pass_rate': 'rate',
+}
+
+
+def normalize_value(field: str, value):
+    """AI がキー名を言い換えてきた場合に、サイトのデータ形式へ揃える。"""
+    if field in ('exams', 'pass_rates'):
+        items = value if isinstance(value, list) else [value]
+        out = []
+        for it in items:
+            if isinstance(it, dict):
+                out.append({_KEY_ALIASES.get(k, k): v for k, v in it.items()})
+        return out
+    return value
+
+
+_ISO_DATE = re.compile(r'(\d{4})-(\d{2})-(\d{2})')
+
+
+def _facts_in_text(value, text: str) -> list[str]:
+    """value に含まれる日付・数値が本文に実在するか。見つからないものを返す。
+
+    日付 2026-10-18 は「10月18日」または「10/18」として、
+    受験料 7700 は「7,700」または「7700」として本文にあることを確認する。
+    """
+    missing = []
+    blob = json.dumps(value, ensure_ascii=False)
+    for y, m, d in _ISO_DATE.findall(blob):
+        m_, d_ = int(m), int(d)
+        if f'{m_}月{d_}日' not in text and f'{m_}/{d_}' not in text:
+            missing.append(f'{y}-{m}-{d}')
+    nums = []
+    def walk(v, key=None):
+        if isinstance(v, dict):
+            for k, x in v.items():
+                walk(x, k)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x, key)
+        elif isinstance(v, (int, float)) and not isinstance(v, bool) and key != 'exam_date':
+            nums.append(v)
+    walk(value)
+    for n in nums:
+        cands = {str(n)}
+        if isinstance(n, int) or float(n).is_integer():
+            cands |= {f'{int(n):,}', str(int(n))}
+        if not any(c in text for c in cands):
+            missing.append(str(n))
+    return missing
+
+
 def verify(proposals: list[dict], text: str) -> tuple[list[dict], list[dict]]:
-    """引用が本文に実在し、項目が許可リストにあるものだけ通す。"""
+    """本文に裏付けのある提案だけ通す。
+
+    - 項目が許可リストにあること
+    - 引用 (evidence) の各行が本文にそのまま存在すること
+    - 提案値の日付・数値がすべて本文に存在すること (AI の書き間違い・捏造を止める)
+    """
     norm_text = normalize(text)
     ok, rejected = [], []
     for p in proposals:
-        ev = normalize(str(p.get('evidence') or ''))
-        if p.get('field') not in ALLOWED_FIELDS:
+        field = p.get('field')
+        if field not in ALLOWED_FIELDS:
             rejected.append({**p, 'reject_reason': '対象外の項目'})
-        elif len(ev) < 10:
+            continue
+        p = {**p, 'value': normalize_value(field, p.get('value'))}
+        lines = [normalize(x) for x in str(p.get('evidence') or '').splitlines()]
+        lines = [x for x in lines if x]
+        if sum(len(x) for x in lines) < 10:
             rejected.append({**p, 'reject_reason': '引用が短すぎる'})
-        elif ev not in norm_text:
-            rejected.append({**p, 'reject_reason': '引用が公式ページに存在しない'})
-        else:
-            ok.append(p)
+            continue
+        bad_line = next((x for x in lines if x not in norm_text), None)
+        if bad_line is not None:
+            rejected.append({**p, 'reject_reason': f'引用が公式ページに存在しない: {bad_line[:40]}'})
+            continue
+        missing = _facts_in_text(p.get('value'), norm_text)
+        if missing:
+            rejected.append({**p, 'reject_reason': f'提案値が本文に見当たらない: {", ".join(missing[:5])}'})
+            continue
+        ok.append(p)
     return ok, rejected
 
 
@@ -153,40 +235,42 @@ def run(data_path: Path, state_path: Path, out_path: Path,
     for q in quals:
         if only and q['slug'] not in only:
             continue
-        url = q.get('official_url')
-        if not url:
+        # 日程が別ページにあることも多いので、出典にある公式ページはすべて見る
+        urls = list(dict.fromkeys([u for u in [q.get('official_url'), *(q.get('sources') or [])] if u]))
+        if not urls:
             continue
         report['checked'] += 1
-        try:
-            text, kind = fetch_text(url)
-        except Exception as e:
-            report['errors'][q['slug']] = f'{type(e).__name__}: {e}'[:200]
-            continue
-        h = digest(text)
-        prev = state.get(url)
-        state[url] = {'hash': h, 'kind': kind, 'checked_at': now.isoformat(timespec='seconds')}
-        if prev is None:
-            # 初回は比較対象がないので記録だけ (初期データは人間が確認済みの前提)
-            report['first_seen'].append(q['slug'])
-            continue
-        if prev.get('hash') == h:
-            report['unchanged'] += 1
-            continue
-        report['changed'].append(q['slug'])
-        if kind == 'pdf' or not use_llm:
-            report['proposals'].append({'slug': q['slug'], 'url': url, 'field': None,
-                                        'summary': '公式ページが変更されました (内容の確認が必要)'})
-            continue
-        try:
-            props = propose_updates(q, text, today)
-        except Exception as e:
-            report['errors'][q['slug']] = f'LLM: {type(e).__name__}: {e}'[:200]
-            continue
-        ok, bad = verify(props, text)
-        for p in ok:
-            report['proposals'].append({'slug': q['slug'], 'url': url, **p})
-        for p in bad:
-            report['rejected'].append({'slug': q['slug'], 'url': url, **p})
+        for url in urls:
+            try:
+                text, kind = fetch_text(url)
+            except Exception as e:
+                report['errors'][f"{q['slug']} {url}"] = f'{type(e).__name__}: {e}'[:200]
+                continue
+            h = digest(text)
+            prev = state.get(url)
+            state[url] = {'hash': h, 'kind': kind, 'checked_at': now.isoformat(timespec='seconds')}
+            if prev is None:
+                # 初回は比較対象がないので記録だけ (初期データは人間が確認済みの前提)
+                report['first_seen'].append(url)
+                continue
+            if prev.get('hash') == h:
+                report['unchanged'] += 1
+                continue
+            report['changed'].append(url)
+            if kind == 'pdf' or not use_llm:
+                report['proposals'].append({'slug': q['slug'], 'url': url, 'field': None,
+                                            'summary': '公式ページが変更されました (内容の確認が必要)'})
+                continue
+            try:
+                props = propose_updates(q, text, today)
+            except Exception as e:
+                report['errors'][f"{q['slug']} {url}"] = f'LLM: {type(e).__name__}: {e}'[:200]
+                continue
+            ok, bad = verify(props, text)
+            for p in ok:
+                report['proposals'].append({'slug': q['slug'], 'url': url, **p})
+            for p in bad:
+                report['rejected'].append({'slug': q['slug'], 'url': url, **p})
 
     state_path.write_text(json.dumps(state, ensure_ascii=False, indent=1), encoding='utf-8')
     out_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding='utf-8')
