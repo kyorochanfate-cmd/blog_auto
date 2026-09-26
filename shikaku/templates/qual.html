@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}{{ q.name }}の試験日程・合格率・受験料【{{ today.year }}年最新】｜{{ site.name }}{% endblock %}
+{% block description %}{{ summary | join('') | truncate(118, True, '…') }}{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": site.name, "item": site.url ~ "/"},
+        {"@type": "ListItem", "position": 2, "name": q.category},
+        {"@type": "ListItem", "position": 3, "name": q.name, "item": site.url ~ path}
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "name": q.name ~ "の試験日程・合格率・受験料",
+      "url": site.url ~ path,
+      "dateModified": q.checked_at,
+      "isPartOf": {"@type": "WebSite", "name": site.name, "url": site.url}
+    }
+  ]
+} | tojson }}
+</script>
+{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="/">トップ</a> › {{ q.category }} › {{ q.name }}</nav>
+<h1>{{ q.name }}の試験日程・合格率・受験料</h1>
+<p class="checked">データ確認日: {{ q.checked_at or '未確認' }}{% if q.organizer %} ／ 実施団体: {{ q.organizer }}{% endif %}</p>
+
+<section class="summary">
+  {% for s in summary %}<p>{{ s }}</p>{% endfor %}
+</section>
+
+<section id="schedule">
+  <h2>試験日程と申込期間</h2>
+  {% if upcoming %}
+  <table class="tbl">
+    <thead><tr><th>回</th><th>試験日</th><th>申込期間</th><th>状況</th></tr></thead>
+    <tbody>
+    {% for e in upcoming %}
+      <tr>
+        <td class="nowrap">{{ e.label or '—' }}</td>
+        <td class="nowrap">{{ e.date | md }}<br><span class="muted">あと{{ e.days_left }}日</span></td>
+        <td>{% if e.apply_start or e.apply_end %}<span class="nowrap">{{ e.apply_start | md if e.apply_start else '?' }}〜</span><span class="nowrap">{{ e.apply_end | md if e.apply_end else '?' }}</span>{% else %}公式発表待ち{% endif %}</td>
+        <td>
+          {% if e.apply_status == 'open' %}<span class="badge open">受付中</span><br><span class="muted small nowrap">締切まで{{ e.apply_days_left }}日</span>
+          {% elif e.apply_status == 'before' %}<span class="badge before">受付前</span>
+          {% elif e.apply_status == 'closed' %}<span class="badge closed">締切済み</span>
+          {% else %}<span class="badge">要確認</span>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  {% if q.schedule_text %}<p>試験の頻度: {{ q.schedule_text }}</p>{% endif %}
+  {% if q.exam_format %}<p>試験形式: {{ q.exam_format }}</p>{% endif %}
+  <p><a class="btn" href="/tools/plan/?q={{ q.slug }}">試験日から逆算して勉強計画を作る</a></p>
+</section>
+
+{% if stats %}
+<section id="pass-rate">
+  <h2>合格率の推移</h2>
+  {% if chart_svg %}<div class="chart-wrap">{{ chart_svg | safe }}</div>{% endif %}
+  <table class="tbl">
+    <thead><tr><th>回</th><th>合格率</th>{% if q.pass_rates | selectattr('examinees') | list %}<th>受験者数</th>{% endif %}</tr></thead>
+    <tbody>
+    {% for r in q.pass_rates | reverse %}
+      <tr><td>{{ r.label }}</td><td>{{ r.rate }}%</td>{% if q.pass_rates | selectattr('examinees') | list %}<td>{{ '{:,}'.format(r.examinees) if r.examinees else '—' }}</td>{% endif %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% if stats.count >= 3 %}<p>過去{{ stats.count }}回の平均は{{ stats.avg }}%です。</p>{% endif %}
+</section>
+{% endif %}
+
+<section id="fee">
+  <h2>受験料・受験資格</h2>
+  <table class="tbl kv">
+    <tr><th>受験料</th><td>{% if q.fee_yen %}{{ '{:,}'.format(q.fee_yen) }}円{% if q.fee_note %}<br><span class="muted">{{ q.fee_note }}</span>{% endif %}{% else %}未確認{% endif %}</td></tr>
+    {% if q.eligibility %}<tr><th>受験資格</th><td>{{ q.eligibility }}</td></tr>{% endif %}
+    {% if q.examinees_text %}<tr><th>受験者数</th><td>{{ q.examinees_text }}</td></tr>{% endif %}
+  </table>
+</section>
+
+{% if q.courses %}
+<section id="courses">
+  <h2>{{ q.name }}に対応している通信講座</h2>
+  <p class="muted">資料請求は無料の講座がほとんどです。受講料・教材・サポート内容を比べてから選ぶのがおすすめです。</p>
+  <ul class="courses">
+  {% for c in q.courses %}
+    <li>
+      {% if c.url %}<a href="{{ c.url }}" rel="sponsored noopener" target="_blank">{{ c.name }}</a>{% else %}{{ c.name if c.name else c }}{% endif %}
+      {% if c.note %}<span class="muted"> — {{ c.note }}</span>{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section id="faq">
+  <h2>よくある質問</h2>
+  {% for f in faqs %}
+  <details><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section id="sources">
+  <h2>出典</h2>
+  <ul class="small">
+  {% for s in q.sources %}<li><a href="{{ s }}" rel="nofollow noopener" target="_blank">{{ s }}</a></li>{% endfor %}
+  {% if q.official_url and q.official_url not in q.sources %}<li><a href="{{ q.official_url }}" rel="nofollow noopener" target="_blank">{{ q.official_url }}</a>（実施団体の公式ページ）</li>{% endif %}
+  </ul>
+  <p class="small">申込の前に、必ず実施団体の公式サイトで最新の情報を確認してください。</p>
+</section>
+{% endblock %}
