@@ -1,0 +1,1745 @@
+[
+ {
+  "slug": "eisei-kanrisha-1",
+  "name": "第一種衛生管理者",
+  "category": "安全衛生",
+  "organizer": "公益財団法人安全衛生技術試験協会",
+  "official_url": "https://www.exam.or.jp/schedule/h_nittei502/",
+  "schedule_text": "通年（毎月複数回）",
+  "eligibility": "労働衛生の実務経験等が必要",
+  "fee_yen": 8800,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 46.8,
+    "examinees": 66401
+   }
+  ],
+  "examinees_text": "66,401人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.exam.or.jp/schedule/h_nittei502/",
+   "https://www.exam.or.jp/h_gokakuritsu",
+   "https://www.exam.or.jp/h_tesuryo/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "denki-koji-2",
+  "name": "第二種電気工事士",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人電気技術者試験センター",
+  "official_url": "https://www.shiken.or.jp/construction/second/",
+  "schedule_text": "年2回（上期・下期）",
+  "exam_format": "学科（CBT／筆記）・技能",
+  "eligibility": "誰でも受験可",
+  "fee_yen": 11100,
+  "fee_note": "ネット申込・非課税（郵送は12,500円）",
+  "exams": [
+   {
+    "label": "令和8年度下期 学科試験（筆記方式）",
+    "exam_date": "2026-10-25",
+    "apply_start": "2026-08-17",
+    "apply_end": "2026-09-03"
+   },
+   {
+    "label": "令和8年度下期 技能試験（12月12日・13日のいずれか）",
+    "exam_date": "2026-12-12"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 56.6,
+    "examinees": 139087,
+    "series": "学科",
+    "calc": true
+   },
+   {
+    "label": "令和8年度上期",
+    "rate": 62.2,
+    "examinees": 78290,
+    "series": "学科"
+   },
+   {
+    "label": "令和7年度",
+    "rate": 71.8,
+    "examinees": 99610,
+    "series": "技能",
+    "calc": true
+   },
+   {
+    "label": "令和8年度上期",
+    "rate": 73.4,
+    "examinees": 58393,
+    "series": "技能"
+   }
+  ],
+  "examinees_text": "139,087人（令和7年度・学科）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.shiken.or.jp/construction/second/",
+   "https://www.shiken.or.jp/construction/second/result/",
+   "https://www.shiken.or.jp/ecee-overview/press/upload/2026_K_kamikigakka_735683.pdf",
+   "https://www.shiken.or.jp/ecee-overview/press/upload/2026_K_kamikiginou_8185.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kiken-otsu4",
+  "name": "危険物取扱者 乙種第4類",
+  "category": "安全衛生",
+  "organizer": "一般財団法人消防試験研究センター",
+  "official_url": "https://www.shoubo-shiken.or.jp/kikenbutsu/",
+  "schedule_text": "都道府県支部ごとに年複数回（全国で通年）",
+  "eligibility": "誰でも受験可",
+  "fee_yen": 5300,
+  "fee_note": "乙種共通・非課税",
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和5年度",
+    "rate": 32.0,
+    "examinees": 223797
+   },
+   {
+    "label": "令和6年度",
+    "rate": 31.7,
+    "examinees": 223846
+   },
+   {
+    "label": "令和7年度",
+    "rate": 31.9,
+    "examinees": 222545
+   }
+  ],
+  "examinees_text": "222,545人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.shoubo-shiken.or.jp/kikenbutsu/",
+   "https://shinsei.shoubo-shiken.or.jp/",
+   "https://www.shoubo-shiken.or.jp/result/",
+   "https://www.shoubo-shiken.or.jp/result/r05/",
+   "https://www.shoubo-shiken.or.jp/result/r06/",
+   "https://www.shoubo-shiken.or.jp/result/r07/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "denken-3",
+  "name": "第三種電気主任技術者（電験三種）",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人電気技術者試験センター",
+  "official_url": "https://www.shiken.or.jp/chief/third/",
+  "schedule_text": "年2回（上期・下期）",
+  "exam_format": "CBT・筆記",
+  "fee_yen": 7700,
+  "fee_note": "ネット申込（郵送は8,100円）",
+  "exams": [
+   {
+    "label": "令和8年度下期 CBT方式（2月4日～2月28日）",
+    "exam_date": "2027-02-04",
+    "apply_start": "2026-11-09",
+    "apply_end": "2026-11-26"
+   },
+   {
+    "label": "令和8年度下期 筆記方式",
+    "exam_date": "2027-03-21",
+    "apply_start": "2026-11-09",
+    "apply_end": "2026-11-26"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和7年度上期",
+    "rate": 12.9,
+    "examinees": 24766
+   },
+   {
+    "label": "令和7年度下期",
+    "rate": 13.1,
+    "examinees": 24176
+   }
+  ],
+  "examinees_text": "48,942人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   }
+  ],
+  "sources": [
+   "https://www.shiken.or.jp/chief/third/",
+   "https://www.shiken.or.jp/chief/third/result/",
+   "https://www.shiken.or.jp/ecee-overview/news/upload/160R7denkenT01kekka.pdf",
+   "https://www.shiken.or.jp/ecee-overview/press/upload/011R7denkenT02kekka.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "eisei-kanrisha-2",
+  "name": "第二種衛生管理者",
+  "category": "安全衛生",
+  "organizer": "公益財団法人安全衛生技術試験協会",
+  "official_url": "https://www.exam.or.jp/schedule/h_nittei502/",
+  "schedule_text": "通年（毎月複数回）",
+  "eligibility": "労働衛生の実務経験等が必要",
+  "fee_yen": 8800,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 48.7,
+    "examinees": 40653
+   }
+  ],
+  "examinees_text": "40,653人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.exam.or.jp/schedule/h_nittei502/",
+   "https://www.exam.or.jp/h_gokakuritsu",
+   "https://www.exam.or.jp/h_tesuryo/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "chintai-kanrishi",
+  "name": "賃貸不動産経営管理士",
+  "category": "不動産",
+  "organizer": "一般社団法人賃貸不動産経営管理士協議会",
+  "official_url": "https://www.chintaikanrishi.jp/exam/summary",
+  "schedule_text": "年1回（11月）",
+  "fee_yen": 12000,
+  "exams": [
+   {
+    "label": "令和8年度",
+    "exam_date": "2026-11-15",
+    "apply_start": "2026-08-03",
+    "apply_end": "2026-09-30"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 29.5,
+    "examinees": 31792
+   }
+  ],
+  "examinees_text": "31,792人（令和7年度）",
+  "courses": [
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   }
+  ],
+  "sources": [
+   "https://www.chintaikanrishi.jp/exam/summary",
+   "https://www.chintaikanrishi.jp/exam/statistics",
+   "https://www.chintaikanrishi.jp/assets/common/else/examination---summary_2025_1.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kanri-gyomu-shuninsha",
+  "name": "管理業務主任者",
+  "category": "不動産",
+  "organizer": "一般社団法人マンション管理業協会",
+  "official_url": "https://www.kanrikyo.or.jp/kanri/siken.html",
+  "schedule_text": "年1回（12月）",
+  "fee_yen": 8900,
+  "fee_note": "非課税（Web申込は別途事務手数料297円）",
+  "exams": [
+   {
+    "label": "令和8年度",
+    "exam_date": "2026-12-06",
+    "apply_start": "2026-08-03",
+    "apply_end": "2026-09-30"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和5年度",
+    "rate": 21.9,
+    "examinees": 14652
+   },
+   {
+    "label": "令和6年度",
+    "rate": 21.3,
+    "examinees": 14850
+   },
+   {
+    "label": "令和7年度",
+    "rate": 19.6,
+    "examinees": 14435
+   }
+  ],
+  "examinees_text": "14,435人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   }
+  ],
+  "notices": [
+   "申込締切はWeb申込2026年9月30日、郵送申込2026年8月24日"
+  ],
+  "sources": [
+   "https://www.kanrikyo.or.jp/kanri/siken.html",
+   "https://www.kanrikyo.or.jp/kanri/shiken_r08/shiken_detail_20260605.html",
+   "https://www.kanrikyo.or.jp/kanri/shiken_r08/pdf/gaiyou.pdf",
+   "https://www.kanrikyo.or.jp/kanri/shiken_r05/pdf/goukakugaiyou.pdf",
+   "https://www.kanrikyo.or.jp/kanri/shiken_r06/pdf/goukakugaiyou.pdf",
+   "https://www.kanrikyo.or.jp/kanri/shiken_r07/pdf/goukakugaiyou.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "mansion-kanrishi",
+  "name": "マンション管理士",
+  "category": "不動産",
+  "organizer": "公益財団法人マンション管理センター",
+  "official_url": "https://www.mankan.or.jp/",
+  "schedule_text": "年1回（11月）",
+  "fee_yen": 9400,
+  "fee_note": "Web申込は別途事務手数料317円",
+  "exams": [
+   {
+    "label": "令和8年度",
+    "exam_date": "2026-11-29",
+    "apply_start": "2026-08-03",
+    "apply_end": "2026-09-30"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和6年度",
+    "rate": 12.7,
+    "examinees": 10955
+   },
+   {
+    "label": "令和7年度",
+    "rate": 11.0,
+    "examinees": 10984
+   }
+  ],
+  "examinees_text": "10,984人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   }
+  ],
+  "notices": [
+   "申込締切はインターネット申込2026年9月30日、郵送申込2026年8月31日"
+  ],
+  "sources": [
+   "https://www.mankan.or.jp/",
+   "https://www.mlit.go.jp/report/press/house03_hh_000271.html",
+   "https://www.mankan.org/",
+   "https://www.mankan.org/pdf/kanpo.pdf",
+   "https://www.mankan.org/pdf/2026_webannai.pdf",
+   "https://www.mankan.org/pdf/2026_websousa_guide.pdf",
+   "https://www.mankan.org/pdf/R7_goukakusyagaiyo.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "boiler-2",
+  "name": "二級ボイラー技士",
+  "category": "電気・設備・建設",
+  "organizer": "公益財団法人安全衛生技術試験協会",
+  "official_url": "https://www.exam.or.jp/schedule/h_nittei122",
+  "schedule_text": "通年（毎月実施）",
+  "eligibility": "誰でも受験可",
+  "fee_yen": 8800,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 52.9,
+    "examinees": 21349
+   }
+  ],
+  "examinees_text": "21,349人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.exam.or.jp/schedule/h_nittei122",
+   "https://www.exam.or.jp/h_gokakuritsu",
+   "https://www.exam.or.jp/h_tesuryo/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "hisho-2",
+  "name": "秘書検定2級",
+  "category": "事務・ビジネス",
+  "organizer": "公益財団法人実務技能検定協会",
+  "official_url": "https://jitsumu-ginou-kentei.jp/HS/schedule",
+  "schedule_text": "年3回（2月・6月・11月）＋CBT随時",
+  "exam_format": "筆記／CBT",
+  "fee_yen": 5200,
+  "fee_note": "第140回（筆記試験）の2級受験料",
+  "exams": [
+   {
+    "label": "第140回",
+    "exam_date": "2026-11-15",
+    "apply_start": "2026-09-03",
+    "apply_end": "2026-10-13"
+   },
+   {
+    "label": "第141回",
+    "exam_date": "2027-02-07",
+    "apply_start": "2026-12-07",
+    "apply_end": "2027-01-12"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "第137回",
+    "rate": 56.0,
+    "examinees": 5765
+   },
+   {
+    "label": "第138回",
+    "rate": 73.0,
+    "examinees": 3867
+   },
+   {
+    "label": "第139回",
+    "rate": 56.3,
+    "examinees": 6563
+   }
+  ],
+  "examinees_text": "17,300人（2025年度・CBT）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://jitsumu-ginou-kentei.jp/HS/schedule",
+   "https://jitsumu-ginou-kentei.jp/HS/totalize",
+   "https://jitsumu-ginou-kentei.jp/HS/guide",
+   "https://jitsumu-ginou-kentei.jp/HS/totalize/2996",
+   "https://jitsumu-ginou-kentei.jp/HS/totalize/3016",
+   "https://jitsumu-ginou-kentei.jp/HS/totalize/3050",
+   "https://jitsumu-ginou-kentei.jp/HS/totalize/3015"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kokunai-ryoko",
+  "name": "国内旅行業務取扱管理者",
+  "category": "その他",
+  "organizer": "一般社団法人全国旅行業協会（ANTA）",
+  "official_url": "https://www.anta.or.jp/exam/shiken/annai.html",
+  "schedule_text": "年1回（9月・CBT）",
+  "exam_format": "CBT",
+  "fee_yen": 8000,
+  "fee_note": "別途システム利用料660円",
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和6年度",
+    "rate": 33.4,
+    "examinees": 10943
+   },
+   {
+    "label": "令和7年度",
+    "rate": 35.6,
+    "examinees": 10329
+   }
+  ],
+  "examinees_text": "10,329人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://www.anta.or.jp/exam/shiken/annai.html",
+   "https://www.anta.or.jp/exam/shiken/kakomon.html",
+   "https://www.anta.or.jp/exam/shiken/pdf/R06exam_jissijyokyo.pdf",
+   "https://www.anta.or.jp/exam/shiken/pdf/R07exam_jissijyokyo_.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "nihongo-kyoin",
+  "name": "日本語教員試験",
+  "category": "教育・語学",
+  "organizer": "文部科学省",
+  "official_url": "https://www.mext.go.jp/a_menu/nihongo_kyoiku/mext_00004.html",
+  "schedule_text": "年1回（11月）",
+  "fee_yen": 18900,
+  "fee_note": "基礎試験免除者は17,300円",
+  "exams": [
+   {
+    "label": "令和8年度",
+    "exam_date": "2026-11-08",
+    "apply_start": "2026-07-13",
+    "apply_end": "2026-08-21"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和6年度",
+    "rate": 62.6,
+    "examinees": 17655
+   },
+   {
+    "label": "令和7年度",
+    "rate": 67.5,
+    "examinees": 17597
+   }
+  ],
+  "examinees_text": "17,597人（令和7年度）",
+  "courses": [
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "アガルート"
+   }
+  ],
+  "notices": [
+   "合格率は全試験免除者を含む数値"
+  ],
+  "sources": [
+   "https://www.mext.go.jp/a_menu/nihongo_kyoiku/mext_00004.html",
+   "https://www.mext.go.jp/content/20241220-mxt_nihongo02-000039332_1.pdf",
+   "https://www.mext.go.jp/content/20251210-mxt_nihongo02-000046171_01.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kisho-yohoshi",
+  "name": "気象予報士",
+  "category": "その他",
+  "organizer": "一般財団法人気象業務支援センター",
+  "official_url": "https://www.jmbsc.or.jp/jp/examination/examination-3.html",
+  "schedule_text": "年2回（8月・1月）",
+  "fee_yen": 11400,
+  "fee_note": "科目免除なしの場合（1科目免除10,400円、2科目免除9,400円）",
+  "exams": [
+   {
+    "label": "第67回",
+    "exam_date": "2027-01-31",
+    "apply_start": "2026-11-16",
+    "apply_end": "2026-12-04"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "第64回",
+    "rate": 5.2,
+    "examinees": 4048
+   },
+   {
+    "label": "第65回",
+    "rate": 5.3,
+    "examinees": 3932
+   }
+  ],
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "アガルート"
+   }
+  ],
+  "sources": [
+   "https://www.jmbsc.or.jp/jp/examination/examination-3.html",
+   "https://www.jmbsc.or.jp/jp/examination/examination-5.html",
+   "https://www.jmbsc.or.jp/jp/examination/examination-2.html",
+   "https://www.jmbsc.or.jp/jp/examination/pdf/cwfe_result.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "shikisai-2",
+  "name": "色彩検定 2級",
+  "category": "その他",
+  "organizer": "公益社団法人色彩検定協会",
+  "official_url": "https://www.aft.or.jp/exam-orders",
+  "schedule_text": "年2回（夏期6月・冬期11月）",
+  "fee_yen": 10000,
+  "exams": [
+   {
+    "label": "2026年度冬期",
+    "exam_date": "2026-11-08",
+    "apply_start": "2026-08-10",
+    "apply_end": "2026-10-01"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "2025年度",
+    "rate": 72.2
+   }
+  ],
+  "courses": [
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://www.aft.or.jp/exam-orders",
+   "https://www.aft.or.jp/pages/feature/data"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kenchiku-sekou-2",
+  "name": "2級建築施工管理技士",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人建設業振興基金",
+  "official_url": "https://www.fcip-shiken.jp/ken2/",
+  "schedule_text": "年2回（前期6月：第一次のみ／後期11月：第一次・第二次）",
+  "eligibility": "第二次検定は実務経験が必要",
+  "fee_yen": 12300,
+  "fee_note": "第一次・第二次同時受検の場合（各6,150円）",
+  "exams": [
+   {
+    "label": "令和8年度後期",
+    "exam_date": "2026-11-08",
+    "apply_start": "2026-06-29",
+    "apply_end": "2026-07-27"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和7年度後期",
+    "rate": 36.3,
+    "examinees": 22803,
+    "series": "第一次"
+   },
+   {
+    "label": "令和8年度前期",
+    "rate": 46.9,
+    "examinees": 15465,
+    "series": "第一次",
+    "calc": true
+   },
+   {
+    "label": "令和7年度後期",
+    "rate": 32.7,
+    "examinees": 18320,
+    "series": "第二次"
+   }
+  ],
+  "courses": [
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   },
+   {
+    "name": "総合資格学院"
+   },
+   {
+    "name": "日建学院"
+   }
+  ],
+  "sources": [
+   "https://www.fcip-shiken.jp/ken2/",
+   "https://www.fcip-shiken.jp/about/",
+   "https://www.fcip-shiken.jp/pdf/kekka_r07_2k.pdf",
+   "https://www.fcip-shiken.jp/pdf/r07_2k_1_goukaku.pdf",
+   "https://www.fcip-shiken.jp/pdf/r07_2k_2_goukaku.pdf",
+   "https://www.fcip-shiken.jp/pdf/r08_2k_1z_goukaku.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kankouji-sekou-2",
+  "name": "2級管工事施工管理技士",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人全国建設研修センター",
+  "official_url": "https://www.jctc.jp/exam/kankouji-2/",
+  "schedule_text": "年2回（前期6月：第一次のみ／後期11月：第一次・第二次）",
+  "eligibility": "第二次検定は実務経験が必要",
+  "fee_yen": 12700,
+  "fee_note": "第一次・第二次同時受検の場合（各6,350円）、ネット事務手数料250円別",
+  "exams": [
+   {
+    "label": "令和8年度後期",
+    "exam_date": "2026-11-15",
+    "apply_start": "2026-07-14",
+    "apply_end": "2026-07-28"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和7年度後期",
+    "rate": 61.1,
+    "examinees": 9409,
+    "series": "第一次"
+   },
+   {
+    "label": "令和8年度前期",
+    "rate": 62.5,
+    "examinees": 5570,
+    "series": "第一次"
+   },
+   {
+    "label": "令和7年度後期",
+    "rate": 50.0,
+    "examinees": 7552,
+    "series": "第二次"
+   }
+  ],
+  "courses": [
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   },
+   {
+    "name": "日建学院"
+   }
+  ],
+  "sources": [
+   "https://www.jctc.jp/exam/kankouji-2/",
+   "https://www.jctc.jp/exam/itstatus/",
+   "https://www.jctc.jp/kentei/info/datasheets20260105.pdf",
+   "https://www.jctc.jp/kentei/info/datasheets20260304_2.pdf",
+   "https://www.jctc.jp/kentei/info/datasheets20260707.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "denki-koji-1",
+  "name": "第一種電気工事士",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人電気技術者試験センター",
+  "official_url": "https://www.shiken.or.jp/construction/first/",
+  "schedule_text": "年2回（上期・下期）",
+  "exam_format": "学科（CBT／筆記）・技能",
+  "eligibility": "誰でも受験可（免状交付には実務経験が必要）",
+  "fee_yen": 13000,
+  "fee_note": "ネット申込（郵送は14,400円）",
+  "exams": [
+   {
+    "label": "令和8年度下期 学科試験（筆記方式）",
+    "exam_date": "2026-10-04",
+    "apply_start": "2026-07-27",
+    "apply_end": "2026-08-13"
+   },
+   {
+    "label": "令和8年度下期 技能試験",
+    "exam_date": "2026-11-21"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 57.4,
+    "examinees": 36154,
+    "series": "学科",
+    "calc": true
+   },
+   {
+    "label": "令和8年度上期",
+    "rate": 57.3,
+    "examinees": 14507,
+    "series": "学科"
+   },
+   {
+    "label": "令和7年度",
+    "rate": 58.1,
+    "examinees": 28403,
+    "series": "技能",
+    "calc": true
+   },
+   {
+    "label": "令和8年度上期",
+    "rate": 56.1,
+    "examinees": 12514,
+    "series": "技能"
+   }
+  ],
+  "examinees_text": "36,154人（令和7年度・学科）",
+  "courses": [
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.shiken.or.jp/construction/first/",
+   "https://www.shiken.or.jp/construction/first/result/",
+   "https://www.shiken.or.jp/ecee-overview/press/upload/2026_P_kamikigakka_849562.pdf",
+   "https://www.shiken.or.jp/ecee-overview/press/upload/2026_P_kamikiginou_66338.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "fp-2",
+  "name": "2級ファイナンシャル・プランニング技能検定",
+  "category": "会計・金融",
+  "organizer": "日本FP協会／金融財政事情研究会（きんざい）",
+  "official_url": "https://www.jafp.or.jp/exam/schedule/",
+  "schedule_text": "CBT方式で通年（毎月実施・休止期間あり）",
+  "exam_format": "CBT",
+  "eligibility": "3級合格・実務経験2年以上等",
+  "fee_yen": 11700,
+  "fee_note": "学科5,700円＋実技6,000円（きんざい2026年度）",
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "2026年4～8月・日本FP協会",
+    "rate": 50.36,
+    "examinees": 24773,
+    "series": "学科"
+   },
+   {
+    "label": "2026年4～8月・日本FP協会",
+    "rate": 56.73,
+    "examinees": 21286,
+    "series": "実技"
+   }
+  ],
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://www.jafp.or.jp/exam/schedule/",
+   "https://www.jafp.or.jp/exam/syutoku/",
+   "https://www.kinzai.or.jp/fp/nittei-fp/48581.html"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kaigo-fukushishi",
+  "name": "介護福祉士",
+  "category": "医療・介護・福祉",
+  "organizer": "公益財団法人社会福祉振興・試験センター",
+  "official_url": "https://www.sssc.or.jp/kaigo/",
+  "schedule_text": "年1回（1月）",
+  "eligibility": "実務経験3年以上＋実務者研修修了等（養成施設ルート等あり）",
+  "fee_yen": 20510,
+  "exams": [
+   {
+    "label": "第39回",
+    "exam_date": "2027-01-31",
+    "apply_start": "2026-07-22",
+    "apply_end": "2026-09-02"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "第38回",
+    "rate": 70.1,
+    "examinees": 78469
+   }
+  ],
+  "examinees_text": "78,469人（第38回）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "資格の大原"
+   },
+   {
+    "name": "三幸福祉カレッジ"
+   }
+  ],
+  "sources": [
+   "https://www.sssc.or.jp/kaigo/",
+   "https://www.mhlw.go.jp/stf/newpage_74538.html",
+   "https://www.mhlw.go.jp/stf/newpage_71070.html"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "chizai-3",
+  "name": "知的財産管理技能検定 3級",
+  "category": "法律・労務",
+  "organizer": "一般財団法人知的財産研究教育財団 知的財産教育協会",
+  "official_url": "https://www.kentei-info-ip-edu.org/exam/schedule/",
+  "schedule_text": "年3回（3月・7月・11月）＋CBT方式",
+  "fee_yen": 12200,
+  "fee_note": "学科6,100円＋実技6,100円",
+  "exams": [
+   {
+    "label": "第55回（紙試験方式）",
+    "exam_date": "2026-11-15",
+    "apply_start": "2026-06-19",
+    "apply_end": "2026-10-06"
+   },
+   {
+    "label": "第56回（紙試験方式）",
+    "exam_date": "2027-03-07",
+    "apply_start": "2026-10-21",
+    "apply_end": "2027-01-25"
+   }
+  ],
+  "pass_rates": [],
+  "courses": [
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   }
+  ],
+  "sources": [
+   "https://www.kentei-info-ip-edu.org/exam/schedule/",
+   "https://www.kentei-info-ip-edu.org/exam_kekka/",
+   "https://www.kentei-info-ip-edu.org/exam/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "tsukanshi",
+  "name": "通関士",
+  "category": "事務・ビジネス",
+  "organizer": "財務省関税局・税関",
+  "official_url": "https://www.customs.go.jp/tsukanshi/60_shiken.htm",
+  "schedule_text": "年1回（10月）",
+  "fee_yen": 3000,
+  "fee_note": "書面申込（収入印紙）の場合。NACCSによる電子申請は2,900円",
+  "exams": [
+   {
+    "label": "第60回",
+    "exam_date": "2026-10-04",
+    "apply_start": "2026-07-21",
+    "apply_end": "2026-08-04"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "第59回",
+    "rate": 15.1,
+    "examinees": 6322
+   }
+  ],
+  "examinees_text": "6,322人（第59回）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "マウンハーフジャパン（MHJ）"
+   }
+  ],
+  "sources": [
+   "https://www.customs.go.jp/tsukanshi/60_shiken.htm",
+   "https://www.customs.go.jp/tsukanshi/60_shiken/kokoku20260701.pdf",
+   "https://www.customs.go.jp/tsukanshi/59_shiken/59shiken_kekka.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "boeki-jitsumu-c",
+  "name": "貿易実務検定 C級",
+  "category": "事務・ビジネス",
+  "organizer": "日本貿易実務検定協会",
+  "official_url": "https://www.boujitsu.com/info/schedule",
+  "schedule_text": "年5回（3・5・7・10・12月）",
+  "exam_format": "Web試験（自宅受験）",
+  "fee_yen": 6270,
+  "fee_note": "税込",
+  "exams": [
+   {
+    "label": "第115回",
+    "exam_date": "2026-10-04",
+    "apply_start": "2026-07-16",
+    "apply_end": "2026-09-18"
+   },
+   {
+    "label": "第116回",
+    "exam_date": "2026-12-06",
+    "apply_start": "2026-09-24",
+    "apply_end": "2026-11-24"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "第112回",
+    "rate": 63.5,
+    "examinees": 1948
+   },
+   {
+    "label": "第113回",
+    "rate": 63.9,
+    "examinees": 1710
+   },
+   {
+    "label": "第114回",
+    "rate": 66.2,
+    "examinees": 1560
+   }
+  ],
+  "courses": [
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "マウンハーフジャパン（MHJ）"
+   }
+  ],
+  "sources": [
+   "https://www.boujitsu.com/info/schedule",
+   "https://www.boujitsu.com/introduction/passrate/grade-c",
+   "https://www.boujitsu.com/requirements/31733.html"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "shobo-otsu6",
+  "name": "消防設備士 乙種第6類",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人消防試験研究センター",
+  "official_url": "https://www.shoubo-shiken.or.jp/shoubou/",
+  "schedule_text": "都道府県支部ごとに実施（全国で通年）",
+  "eligibility": "誰でも受験可",
+  "fee_yen": 4400,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和5年度",
+    "rate": 38.1,
+    "examinees": 25136
+   },
+   {
+    "label": "令和6年度",
+    "rate": 36.2,
+    "examinees": 25835
+   },
+   {
+    "label": "令和7年度",
+    "rate": 35.6,
+    "examinees": 32400
+   }
+  ],
+  "examinees_text": "32,400人（令和7年度）",
+  "courses": [
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.shoubo-shiken.or.jp/shoubou/",
+   "https://shinsei.shoubo-shiken.or.jp/",
+   "https://www.shoubo-shiken.or.jp/result/",
+   "https://www.shoubo-shiken.or.jp/result/r05/",
+   "https://www.shoubo-shiken.or.jp/result/r06/",
+   "https://www.shoubo-shiken.or.jp/result/r07/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "shobo-ko4",
+  "name": "消防設備士 甲種第4類",
+  "category": "電気・設備・建設",
+  "organizer": "一般財団法人消防試験研究センター",
+  "official_url": "https://www.shoubo-shiken.or.jp/shoubou/",
+  "schedule_text": "都道府県支部ごとに実施（全国で通年）",
+  "eligibility": "学歴・資格・実務経験による受験資格あり",
+  "fee_yen": 6600,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和5年度",
+    "rate": 32.3,
+    "examinees": 19205
+   },
+   {
+    "label": "令和6年度",
+    "rate": 34.0,
+    "examinees": 19767
+   },
+   {
+    "label": "令和7年度",
+    "rate": 34.5,
+    "examinees": 21819
+   }
+  ],
+  "examinees_text": "21,819人（令和7年度）",
+  "courses": [
+   {
+    "name": "SAT"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "CIC日本建設情報センター"
+   }
+  ],
+  "sources": [
+   "https://www.shoubo-shiken.or.jp/shoubou/",
+   "https://www.shoubo-shiken.or.jp/result/",
+   "https://www.shoubo-shiken.or.jp/result/r05/",
+   "https://www.shoubo-shiken.or.jp/result/r06/",
+   "https://www.shoubo-shiken.or.jp/result/r07/"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "boki-2",
+  "name": "日商簿記検定2級",
+  "category": "会計・金融",
+  "organizer": "日本商工会議所・各地商工会議所",
+  "official_url": "https://www.kentei.ne.jp/bookkeeping",
+  "schedule_text": "統一試験 年3回（6月・11月・2月）＋ネット試験随時",
+  "exam_format": "筆記（統一試験）／CBT（ネット試験）",
+  "fee_yen": 5500,
+  "fee_note": "税込（ネット試験は別途事務手数料550円）",
+  "exams": [
+   {
+    "label": "第174回 統一試験",
+    "exam_date": "2026-11-15"
+   },
+   {
+    "label": "第175回 統一試験",
+    "exam_date": "2027-02-28"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "第170回",
+    "rate": 22.2,
+    "examinees": 5383
+   },
+   {
+    "label": "第171回",
+    "rate": 23.6,
+    "examinees": 6332
+   },
+   {
+    "label": "第172回",
+    "rate": 15.1,
+    "examinees": 6038
+   },
+   {
+    "label": "第173回",
+    "rate": 15.1,
+    "examinees": 4821
+   }
+  ],
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://www.kentei.ne.jp/bookkeeping",
+   "https://www.kentei.ne.jp/bookkeeping/candidate-data/data_class2",
+   "https://www.kentei.ne.jp/calendar_2026",
+   "https://www.kentei.ne.jp/33013"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "toroku-hanbaisha",
+  "name": "登録販売者",
+  "category": "医療・介護・福祉",
+  "organizer": "各都道府県",
+  "official_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/newpage_57810.html",
+  "schedule_text": "年1回（都道府県ごとに例年8～12月）",
+  "eligibility": "誰でも受験可",
+  "fee_yen": 13600,
+  "fee_note": "東京都の場合",
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和6年度",
+    "rate": 46.7,
+    "examinees": 54526
+   },
+   {
+    "label": "令和7年度",
+    "rate": 40.7,
+    "examinees": 58996
+   }
+  ],
+  "examinees_text": "58,996人（令和7年度・全国）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "三幸医療カレッジ"
+   }
+  ],
+  "notices": [
+   "試験は都道府県（関西広域連合を含む）ごとに実施",
+   "全国の受験者数・合格者数は各試験の延べ人数"
+  ],
+  "sources": [
+   "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/newpage_57810.html",
+   "https://www.hokeniryo.metro.tokyo.lg.jp/anzen/iyaku/tourokushiken/R8shiken",
+   "https://www.koho.metro.tokyo.lg.jp/2026/05/hataraku04.html",
+   "https://www.mhlw.go.jp/content/11121000/001487496.pdf",
+   "https://www.mhlw.go.jp/content/11121000/001738109.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "gyoseishoshi",
+  "name": "行政書士",
+  "category": "法律・労務",
+  "organizer": "一般財団法人行政書士試験研究センター",
+  "official_url": "https://gyosei-shiken.or.jp/",
+  "schedule_text": "年1回（11月）",
+  "fee_yen": 10400,
+  "exams": [
+   {
+    "label": "令和8年度",
+    "exam_date": "2026-11-08",
+    "apply_start": "2026-07-21",
+    "apply_end": "2026-08-24"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和6年度",
+    "rate": 12.9,
+    "examinees": 47785
+   },
+   {
+    "label": "令和7年度",
+    "rate": 14.54,
+    "examinees": 50163
+   }
+  ],
+  "examinees_text": "50,163人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://gyosei-shiken.or.jp/",
+   "https://gyosei-shiken.or.jp/pdf/summary.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "takken",
+  "name": "宅地建物取引士",
+  "category": "不動産",
+  "organizer": "一般財団法人不動産適正取引推進機構",
+  "official_url": "https://www.retio.or.jp/exam/schedule/",
+  "schedule_text": "年1回（10月）",
+  "fee_yen": 8200,
+  "exams": [
+   {
+    "label": "令和8年度",
+    "exam_date": "2026-10-18",
+    "apply_start": "2026-07-01",
+    "apply_end": "2026-07-31"
+   }
+  ],
+  "pass_rates": [
+   {
+    "label": "令和6年度",
+    "rate": 18.6,
+    "examinees": 241436
+   },
+   {
+    "label": "令和7年度",
+    "rate": 18.7,
+    "examinees": 245462
+   }
+  ],
+  "examinees_text": "245,462人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "キャリカレ"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "sources": [
+   "https://www.retio.or.jp/exam/schedule/",
+   "https://www.retio.or.jp/wp-content/uploads/2025/12/10years_result2025.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "it-passport",
+  "name": "ITパスポート",
+  "category": "IT",
+  "organizer": "独立行政法人情報処理推進機構（IPA）",
+  "official_url": "https://www.ipa.go.jp/shiken/",
+  "schedule_text": "CBT方式で通年",
+  "exam_format": "CBT",
+  "fee_yen": 7500,
+  "fee_note": "税込",
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和7年度",
+    "rate": 48.6,
+    "examinees": 271352
+   }
+  ],
+  "examinees_text": "271,352人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "アガルート"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "notices": [
+   "2026年12月28日以降、システムリプレースのため試験を休止予定（再開時期は未定）",
+   "2026年9月28日以降の新規申込は2026年12月27日までの日程のみ選択可"
+  ],
+  "sources": [
+   "https://www.ipa.go.jp/shiken/",
+   "https://www.ipa.go.jp/shiken/reports/ip-oubo2025.html",
+   "https://www.ipa.go.jp/shiken/mousikomi/schedule.html",
+   "https://www.ipa.go.jp/shiken/2026/cbt-202605-jisshi.html"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "kihon-joho",
+  "name": "基本情報技術者",
+  "category": "IT",
+  "organizer": "独立行政法人情報処理推進機構（IPA）",
+  "official_url": "https://www.ipa.go.jp/shiken/2026/r08_fe-sg_exam.html",
+  "schedule_text": "CBT方式で通年",
+  "exam_format": "CBT",
+  "fee_yen": 7500,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和5年度",
+    "rate": 47.1,
+    "examinees": 121611
+   },
+   {
+    "label": "令和6年度",
+    "rate": 40.8,
+    "examinees": 133732
+   },
+   {
+    "label": "令和7年度",
+    "rate": 38.3,
+    "examinees": 147186
+   }
+  ],
+  "examinees_text": "147,186人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "フォーサイト"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "notices": [
+   "2026年12月28日以降、システムリプレースのため試験を休止予定（再開時期は未定）"
+  ],
+  "sources": [
+   "https://www.ipa.go.jp/shiken/2026/r08_fe-sg_exam.html",
+   "https://www.ipa.go.jp/shiken/reports/toukei_fe.html",
+   "https://www.ipa.go.jp/shiken/mousikomi/schedule.html",
+   "https://www.ipa.go.jp/shiken/2026/cbt-202605-jisshi.html",
+   "https://www.ipa.go.jp/shiken/reports/ps6vr70000016ew6-att/202603_fe_toukei.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ },
+ {
+  "slug": "joho-security-management",
+  "name": "情報セキュリティマネジメント",
+  "category": "IT",
+  "organizer": "独立行政法人情報処理推進機構（IPA）",
+  "official_url": "https://www.ipa.go.jp/shiken/2026/r08_fe-sg_exam.html",
+  "schedule_text": "CBT方式で通年",
+  "exam_format": "CBT",
+  "fee_yen": 7500,
+  "exams": [],
+  "pass_rates": [
+   {
+    "label": "令和5年度",
+    "rate": 72.6,
+    "examinees": 36362
+   },
+   {
+    "label": "令和6年度",
+    "rate": 69.0,
+    "examinees": 41657
+   },
+   {
+    "label": "令和7年度",
+    "rate": 70.0,
+    "examinees": 45924
+   }
+  ],
+  "examinees_text": "45,924人（令和7年度）",
+  "courses": [
+   {
+    "name": "ユーキャン"
+   },
+   {
+    "name": "スタディング"
+   },
+   {
+    "name": "ヒューマンアカデミー（たのまな）"
+   },
+   {
+    "name": "TAC"
+   },
+   {
+    "name": "LEC"
+   },
+   {
+    "name": "資格の大原"
+   }
+  ],
+  "notices": [
+   "2026年12月28日以降、システムリプレースのため試験を休止予定（再開時期は未定）"
+  ],
+  "sources": [
+   "https://www.ipa.go.jp/shiken/2026/r08_fe-sg_exam.html",
+   "https://www.ipa.go.jp/shiken/reports/toukei_sg.html",
+   "https://www.ipa.go.jp/shiken/mousikomi/schedule.html",
+   "https://www.ipa.go.jp/shiken/2026/cbt-202605-jisshi.html",
+   "https://www.ipa.go.jp/shiken/reports/ps6vr7000001lzik-att/202603_sg_toukei.pdf"
+  ],
+  "checked_at": "2026-09-26"
+ }
+]

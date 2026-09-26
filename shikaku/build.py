@@ -99,9 +99,15 @@ def build(data_path: Path, out: Path, today: date) -> dict:
             'q': q,
             'upcoming': ups,
             'stats': content.pass_rate_stats(q),
+            'has_rates': content.has_pass_rates(q),
+            'multi_series': len(content.rate_series(q)) > 1,
+            'has_calc': any(r.get('calc') for r in q['pass_rates']),
             'summary': content.summary_sentences(q, today),
             'faqs': content.faqs(q, today),
-            'chart_svg': charts.pass_rate_svg(q['pass_rates']),
+            'charts': [(name, charts.pass_rate_svg(rows))
+                       for name, rows in content.rate_series(q).items()],
+            # 表は系列ごとに、新しい回を上に
+            'rate_rows': [r for rows in content.rate_series(q).values() for r in reversed(rows)],
             'indexable': indexable,
             'path': f'/q/{q["slug"]}/',
         }

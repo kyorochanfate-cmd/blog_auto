@@ -68,19 +68,33 @@
   <p><a class="btn" href="/tools/plan/?q={{ q.slug }}">試験日から逆算して勉強計画を作る</a></p>
 </section>
 
-{% if stats %}
+{% if has_rates %}
+{% set show_ex = q.pass_rates | selectattr('examinees') | list %}
 <section id="pass-rate">
   <h2>合格率の推移</h2>
-  {% if chart_svg %}<div class="chart-wrap">{{ chart_svg | safe }}</div>{% endif %}
+  {% for name, svg in charts %}
+    {% if svg %}
+    <div class="chart-wrap">
+      {% if multi_series %}<p class="chart-cap">{{ name }}</p>{% endif %}
+      {{ svg | safe }}
+    </div>
+    {% endif %}
+  {% endfor %}
   <table class="tbl">
-    <thead><tr><th>回</th><th>合格率</th>{% if q.pass_rates | selectattr('examinees') | list %}<th>受験者数</th>{% endif %}</tr></thead>
+    <thead><tr><th>回</th>{% if multi_series %}<th>区分</th>{% endif %}<th>合格率</th>{% if show_ex %}<th>受験者数</th>{% endif %}</tr></thead>
     <tbody>
-    {% for r in q.pass_rates | reverse %}
-      <tr><td>{{ r.label }}</td><td>{{ r.rate }}%</td>{% if q.pass_rates | selectattr('examinees') | list %}<td>{{ '{:,}'.format(r.examinees) if r.examinees else '—' }}</td>{% endif %}</tr>
+    {% for r in rate_rows %}
+      <tr>
+        <td>{{ r.label }}</td>
+        {% if multi_series %}<td class="nowrap">{{ r.series or '—' }}</td>{% endif %}
+        <td class="nowrap">{{ r.rate }}%{% if r.calc %}<sup>※</sup>{% endif %}</td>
+        {% if show_ex %}<td>{{ '{:,}'.format(r.examinees) if r.examinees else '—' }}</td>{% endif %}
+      </tr>
     {% endfor %}
     </tbody>
   </table>
-  {% if stats.count >= 3 %}<p>過去{{ stats.count }}回の平均は{{ stats.avg }}%です。</p>{% endif %}
+  {% if stats and stats.count >= 3 %}<p>過去{{ stats.count }}回の平均は{{ stats.avg }}%です。</p>{% endif %}
+  {% if has_calc %}<p class="small muted">※ 実施団体は合格率の数字を公表していないため、公表された受験者数と合格者数から当サイトで計算しました。</p>{% endif %}
 </section>
 {% endif %}
 

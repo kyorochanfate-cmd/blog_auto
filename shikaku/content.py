@@ -49,8 +49,18 @@ def upcoming_exams(q: dict, today: date) -> list[dict]:
     return out
 
 
-def pass_rate_stats(q: dict) -> dict | None:
-    rows = [r for r in (q.get('pass_rates') or []) if isinstance(r.get('rate'), (int, float))]
+def rate_series(q: dict) -> dict[str, list[dict]]:
+    """合格率を系列ごとに分ける (学科/技能、第一次/第二次 など)。
+    系列を混ぜて1本のグラフにすると別物の数字を比べてしまうため。
+    系列指定が無い資格は '' の1系列になる。並びはデータ順 (古い順) を保つ。"""
+    out: dict[str, list[dict]] = {}
+    for r in q.get('pass_rates') or []:
+        if isinstance(r.get('rate'), (int, float)):
+            out.setdefault(r.get('series') or '', []).append(r)
+    return out
+
+
+def _stats(rows: list[dict]) -> dict | None:
     if not rows:
         return None
     latest = rows[-1]
@@ -66,6 +76,42 @@ def pass_rate_stats(q: dict) -> dict | None:
         diff = round(latest['rate'] - rows[-2]['rate'], 1)
         stats['diff_prev'] = diff
     return stats
+
+
+def pass_rate_stats(q: dict) -> dict | None:
+    """単一系列の資格の統計。複数系列の資格では None (系列別は series_stats を使う)。"""
+    series = rate_series(q)
+    if len(series) != 1:
+        return None
+    return _stats(next(iter(series.values())))
+
+
+def series_stats(q: dict) -> list[tuple[str, dict]]:
+    return [(name, _stats(rows)) for name, rows in rate_series(q).items()]
+
+
+def has_pass_rates(q: dict) -> bool:
+    return bool(rate_series(q))
+
+
+def _latest_line(q: dict) -> str | None:
+    """「直近の合格率は…」の一文。複数系列なら同じ回の数字を並べる。"""
+    ss = series_stats(q)
+    if not ss:
+        return None
+    if len(ss) == 1:
+        st = ss[0][1]
+        lt = st['latest']
+        line = f'直近（{lt["label"]}）の合格率は{lt["rate"]}%'
+        if st['count'] >= 3:
+            return line + f'で、過去{st["count"]}回の平均は{st["avg"]}%です。'
+        return line + 'です。'
+    labels = {st['latest']['label'] for _, st in ss}
+    if len(labels) == 1:
+        parts = [f'{name}{st["latest"]["rate"]}%' for name, st in ss]
+        return f'直近（{labels.pop()}）の合格率は、' + '・'.join(parts) + 'です。'
+    parts = [f'{name}{st["latest"]["rate"]}%（{st["latest"]["label"]}）' for name, st in ss]
+    return '直近の合格率は、' + '・'.join(parts) + 'です。'
 
 
 def summary_sentences(q: dict, today: date) -> list[str]:
@@ -84,15 +130,11 @@ def summary_sentences(q: dict, today: date) -> list[str]:
             s.append(f'申込は{a.month}月{a.day}日から始まります。')
     elif q.get('schedule_text'):
         s.append(f'{name}の試験は{q["schedule_text"]}です。')
+    line = _latest_line(q)
+    if line:
+        s.append(line)
     st = pass_rate_stats(q)
     if st:
-        lt = st['latest']
-        line = f'直近（{lt["label"]}）の合格率は{lt["rate"]}%'
-        if st['count'] >= 3:
-            line += f'で、過去{st["count"]}回の平均は{st["avg"]}%です。'
-        else:
-            line += 'です。'
-        s.append(line)
         if 'diff_prev' in st and abs(st['diff_prev']) >= 3:
             word = '上昇' if st['diff_prev'] > 0 else '低下'
             s.append(f'前回から{abs(st["diff_prev"])}ポイント{word}しました。')
@@ -122,6 +164,8 @@ def faqs(q: dict, today: date) -> list[dict]:
             a += (f'過去{st["count"]}回では最低{st["min"]["rate"]}%（{st["min"]["label"]}）、'
                   f'最高{st["max"]["rate"]}%（{st["max"]["label"]}）でした。')
         out.append({'q': f'{name}の合格率はどれくらいですか？', 'a': a})
+    elif has_pass_rates(q):
+        out.append({'q': f'{name}の合格率はどれくらいですか？', 'a': _latest_line(q)})
     if q.get('fee_yen'):
         a = f'{q["fee_yen"]:,}円です。'
         if q.get('fee_note'):
@@ -143,7 +187,7 @@ def is_indexable(q: dict, today: date) -> tuple[bool, list[str]]:
         reasons.append('出典がない')
     if not q.get('fee_yen'):
         reasons.append('受験料が未確認')
-    if not pass_rate_stats(q):
+    if not has_pass_rates(q):
         reasons.append('合格率が未確認')
     if not upcoming_exams(q, today) and not q.get('schedule_text'):
         reasons.append('試験日程が未確認')
