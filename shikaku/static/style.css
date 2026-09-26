@@ -72,6 +72,8 @@ h3 { font-size: 1rem; margin: 1.2rem 0 .4rem; }
 .chart .tick { fill: var(--muted); font-size: 13px; }
 .chart .val { fill: var(--fg); font-size: 14px; font-weight: 600; }
 .nowrap { white-space: nowrap; }
+.tbl td.label { min-width: 4.5em; }
+#sources a, .muted a { overflow-wrap: anywhere; word-break: break-all; }
 .chart .bar { fill: var(--bar); }
 .chart .bar-last { fill: var(--bar-last); }
 .chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }

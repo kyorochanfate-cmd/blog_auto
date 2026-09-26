@@ -49,7 +49,7 @@
     <tbody>
     {% for e in upcoming %}
       <tr>
-        <td class="nowrap">{{ e.label or '—' }}</td>
+        <td class="label">{{ e.label or '—' }}</td>
         <td class="nowrap">{{ e.date | md }}<br><span class="muted">あと{{ e.days_left }}日</span></td>
         <td>{% if e.apply_start or e.apply_end %}<span class="nowrap">{{ e.apply_start | md if e.apply_start else '?' }}〜</span><span class="nowrap">{{ e.apply_end | md if e.apply_end else '?' }}</span>{% else %}公式発表待ち{% endif %}</td>
         <td>
