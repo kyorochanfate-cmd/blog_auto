@@ -64,3 +64,26 @@ python -m shikaku.build --today 2026-09-26    # 日付を固定して検証
 2. 公式ページの変更は自動検知するが、反映は人間の承認後
 3. 体験談・合格体験記を AI で作らない
 4. 広告表記（ステマ規制）はフッターと運営者情報に常時表示
+
+## 毎日の自動運用 (`.github/workflows/shikaku.yml`)
+
+毎日 05:10 JST に実行:
+
+1. 承認待ちシートで「承認」された更新案を `quals.json` に反映 (反映があった日だけコミット)
+2. 各資格の出典ページ (公式) を取得し、前回から変わったページだけ Gemini で更新案を作る
+   - 更新案は「引用が本文に実在」「日付・数値がすべて本文に実在」の両方を満たすものだけ残す
+   - PDF の変更は「要確認」として通知のみ
+3. ビルドして、Cloudflare のキーが登録されていれば Cloudflare Pages に公開
+
+- 承認待ちシート: https://docs.google.com/spreadsheets/d/1t7ztlkkrRuans-_CnL5TaoddiTGMAN1p6AAWPJ1UQxc/edit
+  (サービスアカウント agent-loop-sa に編集権限を付与済み)
+- 公式ページの前回ハッシュは Actions キャッシュに保存 (毎日のコミットはしない)
+
+### 必要な GitHub Secrets
+
+| 名前 | 用途 | 状態 |
+|---|---|---|
+| `GCP_SA_KEY` | 承認待ちシートの読み書き | 登録済み (agent_loop と共用) |
+| `GEMINI_API_KEY` | 更新案の作成 | 登録済み (agent_loop と共用) |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare Pages への公開 | 未登録 (未登録の間は公開をスキップ) |
+| `CLOUDFLARE_ACCOUNT_ID` | 同上 | 未登録 |

@@ -45,7 +45,8 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: google_creds.json
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.5-flash-lite
-          SHIKAKU_REVIEW_SHEET_ID: ${{ secrets.SHIKAKU_REVIEW_SHEET_ID }}
+          # 承認待ちシート (IDだけではアクセスできないので秘密情報ではない)
+          SHIKAKU_REVIEW_SHEET_ID: 1t7ztlkkrRuans-_CnL5TaoddiTGMAN1p6AAWPJ1UQxc
         run: python -m shikaku.daily --state watch_state.json --out shikaku/dist
 
       - name: Save watch state
