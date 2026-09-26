@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}資格試験の日程カレンダー【{{ today.year }}〜{{ today.year + 1 }}年】申込締切・合格率まとめ｜{{ site.name }}{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">
+{{ {"@context": "https://schema.org", "@type": "WebSite", "name": site.name, "url": site.url ~ "/"} | tojson }}
+</script>
+{% endblock %}
+{% block content %}
+<h1>資格試験の日程カレンダー</h1>
+<p>{{ site.description }}</p>
+
+{% if closing %}
+<section>
+  <h2>申込締切が近い試験</h2>
+  <ul class="list">
+  {% for c in closing %}
+    <li><a href="/q/{{ c.q.slug }}/">{{ c.q.name }}</a> {{ c.ex.label }} — 締切まで<strong>あと{{ c.ex.apply_days_left }}日</strong>（{{ c.ex.apply_end | md }}）</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section id="calendar">
+  <h2>近日の試験</h2>
+  {% if calendar %}
+  <table class="tbl">
+    <thead><tr><th>試験日</th><th>資格</th><th>申込</th></tr></thead>
+    <tbody>
+    {% for c in calendar %}
+      <tr>
+        <td class="nowrap">{{ c.ex.date | md }}<br><span class="muted">あと{{ c.ex.days_left }}日</span></td>
+        <td><a href="/q/{{ c.q.slug }}/">{{ c.q.name }}</a>{% if c.ex.label %}<br><span class="muted">{{ c.ex.label }}</span>{% endif %}</td>
+        <td>
+          {% if c.ex.apply_status == 'open' %}<span class="badge open">受付中</span>
+          {% elif c.ex.apply_status == 'before' %}<span class="badge before">受付前</span>
+          {% elif c.ex.apply_status == 'closed' %}<span class="badge closed">締切済</span>
+          {% else %}<span class="badge">要確認</span>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>現在掲載できる試験日程はありません。</p>
+  {% endif %}
+</section>
+
+<section>
+  <h2>分野から探す</h2>
+  {% for cat, qs in cats %}
+  <h3>{{ cat }}</h3>
+  <ul class="chips">
+    {% for q in qs %}<li><a href="/q/{{ q.slug }}/">{{ q.name }}</a></li>{% endfor %}
+  </ul>
+  {% endfor %}
+</section>
+{% endblock %}

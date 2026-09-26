@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}資格の勉強計画を試験日から逆算して作る（無料ツール）｜{{ site.name }}{% endblock %}
+{% block description %}資格と試験日、必要な勉強時間を選ぶだけで、1日あたりの勉強時間と、インプット・問題演習・直前対策の期間を自動で計算します。{% endblock %}
+{% block content %}
+<h1>試験日から逆算する勉強計画ツール</h1>
+<p>資格と試験日、確保できる勉強時間を入れると、1日あたりに必要な時間と、各段階の期間を計算します。入力した内容はブラウザの外には送信されません。</p>
+
+<form id="plan" class="plan-form" onsubmit="return false">
+  <label>資格
+    <select id="qual"></select>
+  </label>
+  <label>試験日
+    <select id="exam"></select>
+  </label>
+  <label>合計の勉強時間（目安）
+    <input id="total" type="number" min="1" step="1" inputmode="numeric"> 時間
+  </label>
+  <p id="hours-hint" class="muted small"></p>
+  <label>平日と休日の比率（休日は平日の何倍勉強するか）
+    <input id="ratio" type="number" min="1" max="5" step="0.5" value="2" inputmode="decimal"> 倍
+  </label>
+</form>
+
+<section id="result" aria-live="polite"></section>
+
+<p class="small muted">計算は目安です。必要な勉強時間は、その資格の知識がどれくらいあるかで大きく変わります。</p>
+<script src="/static/plan.js" defer></script>
+{% endblock %}

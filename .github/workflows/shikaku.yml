@@ -1,0 +1,74 @@
+name: shikaku-calendar
+
+on:
+  schedule:
+    # 毎日 05:10 JST (公式ページの確認 → 承認済みの反映 → ビルド → 公開)
+    - cron: '10 20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shikaku-calendar
+  cancel-in-progress: false
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: pip install jinja2 requests trafilatura beautifulsoup4 google-genai google-api-python-client google-auth
+
+      - name: Write service account key
+        run: echo '${{ secrets.GCP_SA_KEY }}' > google_creds.json
+
+      # 公式ページの前回ハッシュ。毎回コミットしないようキャッシュに置く
+      - name: Restore watch state
+        uses: actions/cache/restore@v4
+        with:
+          path: watch_state.json
+          key: shikaku-watch-${{ github.run_id }}
+          restore-keys: shikaku-watch-
+
+      - name: Run daily pipeline
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: google_creds.json
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.5-flash-lite
+          # 承認待ちシート (IDだけではアクセスできないので秘密情報ではない)
+          SHIKAKU_REVIEW_SHEET_ID: 1t7ztlkkrRuans-_CnL5TaoddiTGMAN1p6AAWPJ1UQxc
+        run: python -m shikaku.daily --state watch_state.json --out shikaku/dist
+
+      - name: Save watch state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: watch_state.json
+          key: shikaku-watch-${{ github.run_id }}
+
+      # 承認された更新があった日だけデータをコミット (通常はコミットしない)
+      - name: Commit approved data changes
+        run: |
+          if ! git diff --quiet -- shikaku/data/quals.json; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add shikaku/data/quals.json
+            git commit -m "shikaku: 承認済みの公式情報を反映 ($(date -u +%F))"
+            git push
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: |
+          npx --yes wrangler@3 pages project create shikaku-calendar --production-branch=main || true
+          npx --yes wrangler@3 pages deploy shikaku/dist --project-name=shikaku-calendar --branch=main --commit-dirty=true

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.name }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ site.description }}{% endblock %}">
+<link rel="canonical" href="{{ site.url }}{{ path }}">
+{% if not indexable %}
+<meta name="robots" content="noindex, follow">
+{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ site.url }}{{ path }}">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+{% block jsonld %}{% endblock %}
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/">{{ site.name }}</a>
+    <nav>
+      <a href="/#calendar">試験カレンダー</a>
+      <a href="/tools/plan/">勉強計画</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+{% block content %}{% endblock %}
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="ad-note">当サイトはアフィリエイト広告を利用しています。掲載データは各試験の実施団体が公表した情報をもとにしていますが、最新・正確な情報は必ず公式サイトでご確認ください。</p>
+    <p><a href="/about/">運営者情報</a> ・ <a href="/privacy/">プライバシーポリシー</a></p>
+    <p class="small">最終ビルド: {{ today.isoformat() }}</p>
+  </div>
+</footer>
+</body>
+</html>

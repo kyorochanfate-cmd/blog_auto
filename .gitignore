@@ -16,3 +16,6 @@ tmp/
 # Secrets
 *.yaml
 *.yml (if contains credentials)
+
+# 資格カレンダーのビルド生成物
+shikaku/dist/
